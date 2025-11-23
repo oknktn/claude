@@ -2,268 +2,198 @@
 <invoke name="artifacts">
 <parameter name="command">create</parameter>
 <parameter name="type">text/html</parameter>
-<parameter name="id">quantum_city_game</parameter>
-<parameter name="title">QuantumCity - Zaman Yolculuğu Şehir Yöneticisi</parameter>
+<parameter name="id">mobile_tower_defense</parameter>
+<parameter name="title">Crystal Defenders - Mobil Tower Defense</parameter>
 <parameter name="content"><!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuantumCity - Zaman Yolculuğu Şehir Yöneticisi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Crystal Defenders - Tower Defense</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    #game {
-      max-width: 900px;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border-radius: 30px;
-      padding: 30px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    #game-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 100vw;
+      height: 100vh;
+      position: relative;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    h1 {
-      font-size: 42px;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .subtitle {
-      opacity: 0.9;
-      font-size: 16px;
-    }
-
-    .timeline {
+    /* Header */
+    .game-header {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 12px;
       display: flex;
       justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .era-card {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 3px solid transparent;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .era-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #ffd700, #ffed4e);
-      transform: scaleX(0);
-      transition: transform 0.3s ease;
-    }
-
-    .era-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .era-card.active {
-      border-color: #ffd700;
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
-    }
-
-    .era-card.active::before {
-      transform: scaleX(1);
-    }
-
-    .era-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    .era-name {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .era-year {
-      font-size: 14px;
-      opacity: 0.8;
-    }
-
-    .stats-panel {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 30px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
+      align-items: center;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+      flex-shrink: 0;
     }
 
     .stat {
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     .stat-icon {
-      font-size: 28px;
-      margin-bottom: 5px;
+      font-size: 20px;
     }
 
-    .stat-value {
-      font-size: 24px;
-      font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    }
-
-    .stat-label {
-      font-size: 12px;
-      opacity: 0.9;
-      margin-top: 5px;
-    }
-
-    .city-grid {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
-
-    .tile {
-      aspect-ratio: 1;
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 15px;
+    .header-left, .header-right {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      gap: 15px;
+    }
+
+    .wave-info {
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .wave-number {
+      font-size: 18px;
+      font-weight: bold;
+      color: #00ffff;
+    }
+
+    /* Canvas */
+    #game-canvas {
+      flex: 1;
+      background: #0f3460;
+      position: relative;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    /* Tower Menu */
+    .tower-menu {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      border-top: 2px solid rgba(0, 255, 255, 0.3);
+      flex-shrink: 0;
+    }
+
+    .tower-btn {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      border: 2px solid rgba(0, 255, 255, 0.5);
+      border-radius: 12px;
+      padding: 12px 8px;
       cursor: pointer;
       transition: all 0.3s ease;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      position: relative;
-    }
-
-    .tile:hover {
-      transform: scale(1.1);
-      background: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
-    }
-
-    .tile-icon {
-      font-size: 32px;
-      margin-bottom: 5px;
-    }
-
-    .tile-name {
-      font-size: 10px;
       text-align: center;
-      opacity: 0.9;
+      position: relative;
+      min-height: 85px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    .tile.locked {
+    .tower-btn:active {
+      transform: scale(0.95);
+    }
+
+    .tower-btn.selected {
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      border-color: #00ffff;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    }
+
+    .tower-btn.disabled {
       opacity: 0.4;
       cursor: not-allowed;
     }
 
-    .tile.locked:hover {
-      transform: none;
-      box-shadow: none;
+    .tower-icon {
+      font-size: 28px;
+      margin-bottom: 5px;
     }
 
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .action-btn {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      border: none;
-      border-radius: 15px;
-      padding: 15px 25px;
-      font-size: 16px;
+    .tower-name {
+      font-size: 11px;
       font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .tower-cost {
+      font-size: 12px;
+      color: #ffd700;
+      font-weight: bold;
+    }
+
+    .tower-stats {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 3px;
+    }
+
+    /* Control Buttons */
+    .controls {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .control-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
       color: white;
+      font-weight: bold;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.3s ease;
-      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
       display: flex;
       align-items: center;
+      gap: 5px;
+      flex: 1;
       justify-content: center;
-      gap: 10px;
+      max-width: 150px;
     }
 
-    .action-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    .control-btn:active {
+      transform: scale(0.95);
     }
 
-    .action-btn:active {
-      transform: translateY(-1px);
+    .control-btn.start {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     }
 
-    .action-btn.primary {
-      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-      color: #333;
+    .control-btn.pause {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     }
 
-    .action-btn.danger {
-      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-    }
-
-    .log {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 15px;
-      padding: 15px;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .log-entry {
-      padding: 8px;
-      margin-bottom: 5px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      font-size: 13px;
-      animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(-20px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -271,9 +201,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      align-items: center;
+      background: rgba(0, 0, 0, 0.9);
       justify-content: center;
+      align-items: center;
       z-index: 1000;
     }
 
@@ -282,441 +212,821 @@
     }
 
     .modal-content {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 25px;
-      padding: 40px;
-      max-width: 500px;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 90%;
+      width: 400px;
       text-align: center;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 3px solid rgba(0, 255, 255, 0.5);
     }
 
     .modal-content h2 {
-      font-size: 36px;
-      margin-bottom: 20px;
+      font-size: 32px;
+      margin-bottom: 15px;
+      color: #00ffff;
     }
 
     .modal-content p {
       font-size: 18px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       opacity: 0.9;
     }
 
-    .tile-info {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 10px;
-      text-align: left;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .progress-bar {
-      background: rgba(0, 0, 0, 0.3);
-      height: 20px;
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-fill {
-      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-      height: 100%;
-      transition: width 0.5s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
+    .modal-btn {
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 15px 30px;
+      color: white;
       font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #00ffff;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 12px;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+      max-width: 200px;
+    }
+
+    /* Health Bar */
+    .enemy-health {
+      position: absolute;
+      height: 4px;
+      background: #ff0000;
+      border-radius: 2px;
+      transition: width 0.2s ease;
+    }
+
+    /* Range indicator */
+    .range-indicator {
+      position: absolute;
+      border: 2px dashed rgba(0, 255, 255, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      display: none;
     }
 
     @media (max-width: 768px) {
-      .timeline {
-        flex-direction: column;
+      .tower-menu {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        padding: 10px;
       }
-      
-      .city-grid {
-        grid-template-columns: repeat(3, 1fr);
+
+      .tower-btn {
+        padding: 10px 5px;
+        min-height: 75px;
       }
-      
-      h1 {
-        font-size: 32px;
+
+      .tower-icon {
+        font-size: 24px;
+      }
+
+      .tower-name {
+        font-size: 10px;
+      }
+
+      .tower-cost {
+        font-size: 11px;
+      }
+
+      .stat {
+        font-size: 14px;
       }
     }
 
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
+    @media (max-width: 480px) {
+      .header-left, .header-right {
+        gap: 10px;
+      }
 
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-    }
+      .wave-info {
+        font-size: 12px;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 10px;
+      .control-btn {
+        padding: 10px 15px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="game">
-    <header>
-      <h1>⏰ QuantumCity</h1>
-      <p class="subtitle">Zamanlar Arası Şehir Yöneticisi</p>
-    </header>
-
-    <div class="timeline">
-      <div class="era-card active" data-era="past">
-        <div class="era-icon">🏛️</div>
-        <div class="era-name">Geçmiş</div>
-        <div class="era-year">1900</div>
+  <div id="game-container">
+    <div class="game-header">
+      <div class="header-left">
+        <div class="stat">
+          <span class="stat-icon">💰</span>
+          <span id="gold">500</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">❤️</span>
+          <span id="lives">20</span>
+        </div>
       </div>
-      <div class="era-card" data-era="present">
-        <div class="era-icon">🏙️</div>
-        <div class="era-name">Şimdi</div>
-        <div class="era-year">2025</div>
+      <div class="wave-info">
+        <div class="wave-number" id="wave">Dalga 1</div>
+        <div style="font-size: 11px; opacity: 0.8;">Düşman: <span id="enemyCount">0</span></div>
       </div>
-      <div class="era-card" data-era="future">
-        <div class="era-icon">🚀</div>
-        <div class="era-name">Gelecek</div>
-        <div class="era-year">2150</div>
-      </div>
-    </div>
-
-    <div class="stats-panel">
-      <div class="stat">
-        <div class="stat-icon">💰</div>
-        <div class="stat-value" id="money">1000</div>
-        <div class="stat-label">Para</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">👥</div>
-        <div class="stat-value" id="population">0</div>
-        <div class="stat-label">Nüfus</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-value" id="energy">0</div>
-        <div class="stat-label">Enerji</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">🌟</div>
-        <div class="stat-value" id="happiness">50%</div>
-        <div class="stat-label">Mutluluk</div>
+      <div class="header-right">
+        <div class="stat">
+          <span class="stat-icon">🎯</span>
+          <span id="score">0</span>
+        </div>
       </div>
     </div>
 
-    <div class="city-grid" id="cityGrid"></div>
+    <canvas id="game-canvas"></canvas>
 
-    <div class="tile-info" id="tileInfo" style="display: none;">
-      <strong id="tileName"></strong>
-      <div id="tileDetails"></div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="tileProgress" style="width: 0%">0%</div>
+    <div class="tower-menu">
+      <div class="tower-btn" data-tower="arrow">
+        <div class="tower-icon">🏹</div>
+        <div class="tower-name">Ok Kulesi</div>
+        <div class="tower-cost">💰100</div>
+        <div class="tower-stats">Hasar: 10 | Menzil: Orta</div>
+      </div>
+      <div class="tower-btn" data-tower="cannon">
+        <div class="tower-icon">💣</div>
+        <div class="tower-name">Top</div>
+        <div class="tower-cost">💰200</div>
+        <div class="tower-stats">Hasar: 30 | Alan Hasarı</div>
+      </div>
+      <div class="tower-btn" data-tower="magic">
+        <div class="tower-icon">🔮</div>
+        <div class="tower-name">Büyü</div>
+        <div class="tower-cost">💰150</div>
+        <div class="tower-stats">Hasar: 15 | Yavaşlatma</div>
+      </div>
+      <div class="tower-btn" data-tower="ice">
+        <div class="tower-icon">❄️</div>
+        <div class="tower-name">Buz</div>
+        <div class="tower-cost">💰250</div>
+        <div class="tower-stats">Hasar: 20 | Donma</div>
       </div>
     </div>
 
-    <div class="actions">
-      <button class="action-btn primary" id="nextTurn">
-        ⏭️ Sonraki Tur
+    <div class="controls">
+      <button class="control-btn start" id="startWave">
+        ▶️ Dalgayı Başlat
       </button>
-      <button class="action-btn" id="saveBtn">
-        💾 Kaydet
+      <button class="control-btn pause" id="pauseBtn">
+        ⏸️ Duraklat
       </button>
-      <button class="action-btn danger" id="resetBtn">
-        🔄 Yeniden Başla
+      <button class="control-btn" id="sellBtn">
+        💸 Sat (50%)
       </button>
-    </div>
-
-    <div class="log" id="log">
-      <div class="log-entry">🎮 QuantumCity'e hoş geldiniz! Şehrinizi zamanlar arası inşa edin.</div>
     </div>
   </div>
 
+  <div class="tooltip" id="tooltip"></div>
+
   <div class="modal" id="gameOverModal">
     <div class="modal-content">
-      <h2 id="gameOverTitle">🎉</h2>
-      <p id="gameOverText"></p>
-      <button class="action-btn primary" onclick="location.reload()">Tekrar Oyna</button>
+      <h2 id="modalTitle">🎮</h2>
+      <p id="modalText"></p>
+      <button class="modal-btn" onclick="location.reload()">Tekrar Oyna</button>
     </div>
   </div>
 
   <script>
-    const BUILDINGS = {
-      past: [
-        { id: 'farm', icon: '🌾', name: 'Çiftlik', cost: 100, pop: 20, energy: -5, income: 50, happiness: 10 },
-        { id: 'workshop', icon: '🔨', name: 'Atölye', cost: 200, pop: 30, energy: -10, income: 80, happiness: 5 },
-        { id: 'market', icon: '🏪', name: 'Pazar', cost: 150, pop: 15, energy: 0, income: 60, happiness: 15 },
-        { id: 'church', icon: '⛪', name: 'Kilise', cost: 300, pop: 10, energy: 0, income: 20, happiness: 25 },
-        { id: 'mill', icon: '🏗️', name: 'Değirmen', cost: 250, pop: 25, energy: 10, income: 100, happiness: 8 }
-      ],
-      present: [
-        { id: 'house', icon: '🏠', name: 'Ev', cost: 300, pop: 100, energy: -20, income: 80, happiness: 20 },
-        { id: 'office', icon: '🏢', name: 'Ofis', cost: 500, pop: 200, energy: -40, income: 200, happiness: 10 },
-        { id: 'factory', icon: '🏭', name: 'Fabrika', cost: 800, pop: 150, energy: -60, income: 350, happiness: -10 },
-        { id: 'park', icon: '🌳', name: 'Park', cost: 200, pop: 0, energy: 5, income: 0, happiness: 40 },
-        { id: 'power', icon: '⚡', name: 'Enerji Santrali', cost: 1000, pop: 50, energy: 200, income: 100, happiness: -5 }
-      ],
-      future: [
-        { id: 'skyscraper', icon: '🏙️', name: 'Gökdelen', cost: 2000, pop: 500, energy: -100, income: 600, happiness: 25 },
-        { id: 'lab', icon: '🔬', name: 'Araştırma Merkezi', cost: 3000, pop: 300, energy: -80, income: 800, happiness: 35 },
-        { id: 'spaceport', icon: '🚀', name: 'Uzay Limanı', cost: 5000, pop: 200, energy: -150, income: 1500, happiness: 50 },
-        { id: 'dome', icon: '🛸', name: 'Biyoküre', cost: 4000, pop: 400, energy: 100, income: 500, happiness: 45 },
-        { id: 'quantum', icon: '⚛️', name: 'Kuantum Reaktör', cost: 8000, pop: 100, energy: 500, income: 1000, happiness: 30 }
-      ]
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Canvas boyutlandırma
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Oyun durumu
+    const game = {
+      gold: 500,
+      lives: 20,
+      wave: 1,
+      score: 0,
+      paused: false,
+      waveActive: false,
+      selectedTower: null,
+      selectedTowerObj: null,
+      towers: [],
+      enemies: [],
+      projectiles: [],
+      particles: []
     };
 
-    let gameState = {
-      currentEra: 'past',
-      turn: 1,
-      money: 1000,
-      population: 0,
-      energy: 0,
-      happiness: 50,
-      cities: {
-        past: Array(15).fill(null),
-        present: Array(15).fill(null),
-        future: Array(15).fill(null)
+    // Yol tanımı (zig-zag pattern)
+    const path = [
+      { x: 0, y: 150 },
+      { x: 200, y: 150 },
+      { x: 200, y: 300 },
+      { x: 400, y: 300 },
+      { x: 400, y: 150 },
+      { x: canvas.width, y: 150 }
+    ];
+
+    // Kule tipleri
+    const TOWER_TYPES = {
+      arrow: {
+        cost: 100,
+        damage: 10,
+        range: 100,
+        fireRate: 1000,
+        color: '#8B4513',
+        projectileColor: '#FFD700',
+        icon: '🏹'
       },
-      selectedTile: null,
-      unlockedEras: { past: true, present: false, future: false }
+      cannon: {
+        cost: 200,
+        damage: 30,
+        range: 120,
+        fireRate: 2000,
+        color: '#696969',
+        projectileColor: '#FF4500',
+        splash: 50,
+        icon: '💣'
+      },
+      magic: {
+        cost: 150,
+        damage: 15,
+        range: 90,
+        fireRate: 800,
+        color: '#9370DB',
+        projectileColor: '#FF00FF',
+        slow: 0.5,
+        icon: '🔮'
+      },
+      ice: {
+        cost: 250,
+        damage: 20,
+        range: 110,
+        fireRate: 1500,
+        color: '#87CEEB',
+        projectileColor: '#00FFFF',
+        freeze: 2000,
+        icon: '❄️'
+      }
     };
 
-    function init() {
-      renderGrid();
-      updateStats();
-      setupEventListeners();
-    }
+    // Düşman tipleri
+    const ENEMY_TYPES = {
+      basic: { hp: 50, speed: 1, gold: 10, color: '#FF6B6B', size: 12, icon: '👾' },
+      fast: { hp: 30, speed: 2, gold: 15, color: '#4ECDC4', size: 10, icon: '⚡' },
+      tank: { hp: 150, speed: 0.6, gold: 30, color: '#95E1D3', size: 16, icon: '🛡️' },
+      boss: { hp: 500, speed: 0.5, gold: 100, color: '#F38181', size: 20, icon: '👹' }
+    };
 
-    function renderGrid() {
-      const grid = document.getElementById('cityGrid');
-      grid.innerHTML = '';
-      
-      const currentCity = gameState.cities[gameState.currentEra];
-      const buildings = BUILDINGS[gameState.currentEra];
-      
-      currentCity.forEach((building, index) => {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        
-        if (building) {
-          const buildingData = buildings.find(b => b.id === building.id);
-          tile.innerHTML = `
-            <div class="tile-icon">${buildingData.icon}</div>
-            <div class="tile-name">${buildingData.name}</div>
-          `;
-          tile.onclick = () => selectTile(index, buildingData);
-        } else {
-          tile.innerHTML = `
-            <div class="tile-icon">➕</div>
-            <div class="tile-name">Boş</div>
-          `;
-          tile.onclick = () => showBuildMenu(index);
-        }
-        
-        grid.appendChild(tile);
-      });
-    }
-
-    function selectTile(index, building) {
-      gameState.selectedTile = index;
-      document.getElementById('tileInfo').style.display = 'block';
-      document.getElementById('tileName').textContent = building.name;
-      
-      const level = gameState.cities[gameState.currentEra][index].level || 1;
-      const maxLevel = 5;
-      
-      document.getElementById('tileDetails').innerHTML = `
-        <div style="margin-top: 10px;">
-          <div>👥 Nüfus: +${building.pop * level}</div>
-          <div>⚡ Enerji: ${building.energy * level}</div>
-          <div>💰 Gelir: +${building.income * level}/tur</div>
-          <div>😊 Mutluluk: ${building.happiness > 0 ? '+' : ''}${building.happiness}%</div>
-          <div style="margin-top: 10px;">📊 Seviye: ${level}/${maxLevel}</div>
-        </div>
-      `;
-      
-      const progress = (level / maxLevel) * 100;
-      document.getElementById('tileProgress').style.width = progress + '%';
-      document.getElementById('tileProgress').textContent = `${level}/${maxLevel}`;
-    }
-
-    function showBuildMenu(index) {
-      const buildings = BUILDINGS[gameState.currentEra];
-      const menu = confirm(
-        `Bu kareye ne inşa etmek istersiniz?\n\n` +
-        buildings.map((b, i) => 
-          `${i + 1}. ${b.icon} ${b.name} - ${b.cost} para\n` +
-          `   Nüfus: +${b.pop} | Gelir: +${b.income}/tur | Mutluluk: ${b.happiness}%`
-        ).join('\n\n') +
-        `\n\nBir bina seçmek için 1-${buildings.length} arası sayı girin (İptal için ESC)`
-      );
-      
-      if (menu) {
-        const choice = prompt(`Bina numarası (1-${buildings.length}):`);
-        const buildingIndex = parseInt(choice) - 1;
-        
-        if (buildingIndex >= 0 && buildingIndex < buildings.length) {
-          buildBuilding(index, buildings[buildingIndex]);
-        }
+    // Düşman sınıfı
+    class Enemy {
+      constructor(type, waveMultiplier) {
+        const enemyData = ENEMY_TYPES[type];
+        this.type = type;
+        this.maxHp = enemyData.hp * waveMultiplier;
+        this.hp = this.maxHp;
+        this.speed = enemyData.speed;
+        this.gold = Math.floor(enemyData.gold * waveMultiplier);
+        this.color = enemyData.color;
+        this.size = enemyData.size;
+        this.icon = enemyData.icon;
+        this.pathIndex = 0;
+        this.x = path[0].x;
+        this.y = path[0].y;
+        this.frozen = 0;
+        this.slowed = 1;
       }
-    }
 
-    function buildBuilding(tileIndex, building) {
-      if (gameState.money < building.cost) {
-        addLog(`❌ Yetersiz para! ${building.name} için ${building.cost} para gerekli.`);
-        return;
-      }
-      
-      gameState.money -= building.cost;
-      gameState.cities[gameState.currentEra][tileIndex] = { 
-        id: building.id, 
-        level: 1 
-      };
-      
-      addLog(`✅ ${building.icon} ${building.name} inşa edildi!`);
-      renderGrid();
-      updateStats();
-    }
+      update(deltaTime) {
+        if (this.frozen > 0) {
+          this.frozen -= deltaTime;
+          return;
+        }
 
-    function nextTurn() {
-      gameState.turn++;
-      
-      // Gelir hesapla
-      let totalIncome = 0;
-      let totalPop = 0;
-      let totalEnergy = 0;
-      let happinessChange = 0;
-      
-      Object.keys(gameState.cities).forEach(era => {
-        if (!gameState.unlockedEras[era]) return;
-        
-        gameState.cities[era].forEach(tile => {
-          if (tile) {
-            const building = BUILDINGS[era].find(b => b.id === tile.id);
-            const level = tile.level || 1;
-            totalIncome += building.income * level;
-            totalPop += building.pop * level;
-            totalEnergy += building.energy * level;
-            happinessChange += building.happiness;
+        const target = path[this.pathIndex + 1];
+        if (!target) {
+          game.lives--;
+          updateStats();
+          const index = game.enemies.indexOf(this);
+          if (index > -1) game.enemies.splice(index, 1);
+          
+          if (game.lives <= 0) {
+            gameOver(false);
           }
-        });
-      });
-      
-      gameState.money += totalIncome;
-      gameState.population = totalPop;
-      gameState.energy = totalEnergy;
-      gameState.happiness = Math.max(0, Math.min(100, gameState.happiness + (happinessChange / 10)));
-      
-      // Enerji kontrolü
-      if (gameState.energy < 0) {
-        gameState.happiness -= 5;
-        addLog(`⚠️ Enerji yetersiz! Mutluluk düştü.`);
-      }
-      
-      // Dönem kilidi aç
-      if (gameState.turn >= 10 && !gameState.unlockedEras.present) {
-        gameState.unlockedEras.present = true;
-        addLog(`🎉 Şimdi dönemi açıldı!`);
-        document.querySelector('[data-era="present"]').style.opacity = '1';
-      }
-      
-      if (gameState.turn >= 20 && !gameState.unlockedEras.future) {
-        gameState.unlockedEras.future = true;
-        addLog(`🚀 Gelecek dönemi açıldı!`);
-        document.querySelector('[data-era="future"]').style.opacity = '1';
-      }
-      
-      addLog(`📅 Tur ${gameState.turn} - Gelir: +${totalIncome} para`);
-      
-      // Oyun sonu kontrolleri
-      if (gameState.money < 0) {
-        gameOver('İflas ettiniz! Paranız bitti.');
-      } else if (gameState.happiness <= 0) {
-        gameOver('Halk mutsuz! Şehir terk edildi.');
-      } else if (gameState.population >= 5000) {
-        gameOver('Tebrikler! 5000+ nüfuslu mega şehir kurdunuz! 🎉');
-      }
-      
-      updateStats();
-    }
-
-    function updateStats() {
-      document.getElementById('money').textContent = Math.round(gameState.money);
-      document.getElementById('population').textContent = gameState.population;
-      document.getElementById('energy').textContent = gameState.energy;
-      document.getElementById('happiness').textContent = Math.round(gameState.happiness) + '%';
-    }
-
-    function addLog(message) {
-      const log = document.getElementById('log');
-      const entry = document.createElement('div');
-      entry.className = 'log-entry';
-      entry.textContent = message;
-      log.insertBefore(entry, log.firstChild);
-      
-      while (log.children.length > 20) {
-        log.removeChild(log.lastChild);
-      }
-    }
-
-    function gameOver(message) {
-      document.getElementById('gameOverTitle').textContent = 
-        gameState.population >= 5000 ? '🎉 Kazandınız!' : '💔 Oyun Bitti';
-      document.getElementById('gameOverText').textContent = 
-        `${message}\n\nTur: ${gameState.turn} | Nüfus: ${gameState.population} | Para: ${Math.round(gameState.money)}`;
-      document.getElementById('gameOverModal').classList.add('active');
-    }
-
-    function setupEventListeners() {
-      document.getElementById('nextTurn').onclick = nextTurn;
-      
-      document.getElementById('saveBtn').onclick = () => {
-        localStorage.setItem('quantumCity', JSON.stringify(gameState));
-        addLog('💾 Oyun kaydedildi!');
-      };
-      
-      document.getElementById('resetBtn').onclick = () => {
-        if (confirm('Oyunu sıfırlamak istediğinize emin misiniz?')) {
-          location.reload();
+          return;
         }
-      };
-      
-      document.querySelectorAll('.era-card').forEach(card => {
-        const era = card.dataset.era;
-        if (!gameState.unlockedEras[era]) {
-          card.style.opacity = '0.5';
+
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 5) {
+          this.pathIndex++;
+        } else {
+          const actualSpeed = this.speed * this.slowed * (deltaTime / 16);
+          this.x += (dx / dist) * actualSpeed;
+          this.y += (dy / dist) * actualSpeed;
         }
-        
-        card.onclick = () => {
-          if (!gameState.unlockedEras[era]) {
-            addLog(`🔒 Bu dönem henüz açılmadı!`);
-            return;
+
+        this.slowed = Math.min(this.slowed + 0.02, 1);
+      }
+
+      draw() {
+        // Düşman gövdesi
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // İkon
+        ctx.font = `${this.size}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.icon, this.x, this.y);
+
+        // Can çubuğu
+        const barWidth = this.size * 2;
+        const barHeight = 4;
+        const barX = this.x - barWidth / 2;
+        const barY = this.y - this.size - 8;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(barX, barY, barWidth, barHeight);
+
+        const hpPercent = this.hp / this.maxHp;
+        ctx.fillStyle = hpPercent > 0.5 ? '#00ff00' : hpPercent > 0.25 ? '#ffff00' : '#ff0000';
+        ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight);
+
+        // Donma efekti
+        if (this.frozen > 0) {
+          ctx.strokeStyle = '#00FFFF';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size + 3, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      takeDamage(damage) {
+        this.hp -= damage;
+        if (this.hp <= 0) {
+          game.gold += this.gold;
+          game.score += this.gold * 10;
+          updateStats();
+          
+          // Patlama partikülü
+          for (let i = 0; i < 8; i++) {
+            game.particles.push({
+              x: this.x,
+              y: this.y,
+              vx: (Math.random() - 0.5) * 4,
+              vy: (Math.random() - 0.5) * 4,
+              life: 30,
+              color: this.color
+            });
           }
           
-          gameState.currentEra = era;
-          document.querySelectorAll('.era-card').forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          renderGrid();
-          document.getElementById('tileInfo').style.display = 'none';
-        };
-      });
-      
-      // Kayıtlı oyun var mı kontrol et
-      const saved = localStorage.getItem('quantumCity');
-      if (saved) {
-        if (confirm('Kayıtlı oyun bulundu! Yüklemek ister misiniz?')) {
-          gameState = JSON.parse(saved);
-          renderGrid();
-          updateStats();
-          addLog('📁 Oyun yüklendi!');
+          const index = game.enemies.indexOf(this);
+          if (index > -1) game.enemies.splice(index, 1);
         }
       }
     }
 
-    init();
+    // Kule sınıfı
+    class Tower {
+      constructor(type, x, y) {
+        this.type = type;
+        this.x = x;
+        this.y = y;
+        this.data = TOWER_TYPES[type];
+        this.lastFire = 0;
+        this.target = null;
+        this.level = 1;
+      }
+
+      update(time) {
+        // Hedef bul
+        this.target = null;
+        let closestDist = this.data.range;
+
+        for (const enemy of game.enemies) {
+          const dx = enemy.x - this.x;
+          const dy = enemy.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < closestDist) {
+            closestDist = dist;
+            this.target = enemy;
+          }
+        }
+
+        // Ateş et
+        if (this.target && time - this.lastFire > this.data.fireRate) {
+          this.fire();
+          this.lastFire = time;
+        }
+      }
+
+      fire() {
+        game.projectiles.push({
+          x: this.x,
+          y: this.y,
+          target: this.target,
+          speed: 5,
+          damage: this.data.damage * this.level,
+          color: this.data.projectileColor,
+          tower: this
+        });
+      }
+
+      draw() {
+        // Kule gövdesi
+        ctx.fillStyle = this.data.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // İkon
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.data.icon, this.x, this.y);
+
+        // Seviye göstergesi
+        if (this.level > 1) {
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 10px Arial';
+          ctx.fillText(this.level, this.x, this.y + 20);
+        }
+
+        // Menzil göstergesi (seçiliyse)
+        if (game.selectedTowerObj === this) {
+          ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.data.range, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Hedef çizgisi
+        if (this.target) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(this.target.x, this.target.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Yolu çiz
+    function drawPath() {
+      ctx.strokeStyle = 'rgba(139, 69, 19, 0.5)';
+      ctx.lineWidth = 40;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(path[0].x, path[0].y);
+      for (let i = 1; i < path.length; i++) {
+        ctx.lineTo(path[i].x, path[i].y);
+      }
+      ctx.stroke();
+
+      // Yol kenarları
+      ctx.strokeStyle = 'rgba(101, 67, 33, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Dalga başlat
+    function startWave() {
+      if (game.waveActive) return;
+      
+      game.waveActive = true;
+      const waveMultiplier = 1 + (game.wave - 1) * 0.3;
+      let enemyCount = 5 + game.wave * 2;
+
+      // Dalga kompozisyonu
+      const composition = [];
+      const basicCount = Math.floor(enemyCount * 0.5);
+      const fastCount = Math.floor(enemyCount * 0.3);
+      const tankCount = Math.floor(enemyCount * 0.15);
+      const bossCount = game.wave % 5 === 0 ? 1 : 0;
+
+      for (let i = 0; i < basicCount; i++) composition.push('basic');
+      for (let i = 0; i < fastCount; i++) composition.push('fast');
+      for (let i = 0; i < tankCount; i++) composition.push('tank');
+      for (let i = 0; i < bossCount; i++) composition.push('boss');
+
+      // Düşmanları spawn et
+      let spawnIndex = 0;
+      const spawnInterval = setInterval(() => {
+        if (spawnIndex >= composition.length) {
+          clearInterval(spawnInterval);
+          return;
+        }
+
+        game.enemies.push(new Enemy(composition[spawnIndex], waveMultiplier));
+        spawnIndex++;
+      }, 1000);
+    }
+
+    // Mermi güncelleme
+    function updateProjectiles() {
+      for (let i = game.projectiles.length - 1; i >= 0; i--) {
+        const proj = game.projectiles[i];
+        
+        if (!proj.target || proj.target.hp <= 0) {
+          game.projectiles.splice(i, 1);
+          continue;
+        }
+
+        const dx = proj.target.x - proj.x;
+        const dy = proj.target.y - proj.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 5) {
+          // Hasar ver
+          proj.target.takeDamage(proj.damage);
+
+          // Özel efektler
+          if (proj.tower.data.splash) {
+            // Alan hasarı
+            game.enemies.forEach(enemy => {
+              const edx = enemy.x - proj.target.x;
+              const edy = enemy.y - proj.target.y;
+              const edist = Math.sqrt(edx * edx + edy * edy);
+              if (edist < proj.tower.data.splash) {
+                enemy.takeDamage(proj.damage * 0.5);
+              }
+            });
+          }
+
+          if (proj.tower.data.slow) {
+            proj.target.slowed = proj.tower.data.slow;
+          }
+
+          if (proj.tower.data.freeze) {
+            proj.target.frozen = proj.tower.data.freeze;
+          }
+
+          game.projectiles.splice(i, 1);
+        } else {
+          proj.x += (dx / dist) * proj.speed;
+          proj.y += (dy / dist) * proj.speed;
+        }
+      }
+    }
+
+    // Partikül güncelleme
+    function updateParticles() {
+      for (let i = game.particles.length - 1; i >= 0; i--) {
+        const p = game.particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+
+        if (p.life <= 0) {
+          game.particles.splice(i, 1);
+        }
+      }
+    }
+
+    // Çizim
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Arka plan grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 50) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      drawPath();
+
+      // Kuleler
+      game.towers.forEach(tower => tower.draw());
+
+      // Düşmanlar
+      game.enemies.forEach(enemy => enemy.draw());
+
+      // Mermiler
+      game.projectiles.forEach(proj => {
+        ctx.fillStyle = proj.color;
+        ctx.beginPath();
+        ctx.arc(proj.x, proj.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Partikül ler
+      game.particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life / 30;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      });
+    }
+
+    // Güncelleme
+    let lastTime = 0;
+    function gameLoop(currentTime) {
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
+
+      if (!game.paused) {
+        game.enemies.forEach(enemy => enemy.update(deltaTime));
+        game.towers.forEach(tower => tower.update(currentTime));
+        updateProjectiles();
+        updateParticles();
+
+        // Dalga kontrolü
+        if (game.waveActive && game.enemies.length === 0) {
+          game.waveActive = false;
+          game.wave++;
+          game.gold += 50 + game.wave * 10;
+          updateStats();
+          
+          if (game.wave > 20) {
+            gameOver(true);
+            return;
+          }
+        }
+      }
+
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // İstatistikleri güncelle
+    function updateStats() {
+      document.getElementById('gold').textContent = game.gold;
+      document.getElementById('lives').textContent = game.lives;
+      document.getElementById('wave').textContent = `Dalga ${game.wave}`;
+      document.getElementById('score').textContent = game.score;
+      document.getElementById('enemyCount').textContent = game.enemies.length;
+
+      // Kule butonlarını güncelle
+      document.querySelectorAll('.tower-btn').forEach(btn => {
+        const towerType = btn.dataset.tower;
+        if (towerType) {
+          const cost = TOWER_TYPES[towerType].cost;
+          if (game.gold < cost) {
+            btn.classList.add('disabled');
+          } else {
+            btn.classList.remove('disabled');
+          }
+        }
+
+           });
+    }
+
+    // Oyun sonu
+    function gameOver(won) {
+      game.paused = true;
+      const modal = document.getElementById('gameOverModal');
+      document.getElementById('modalTitle').textContent = won ? '🎉 Kazandınız!' : '💔 Oyun Bitti';
+      document.getElementById('modalText').textContent = 
+        won 
+          ? `Tüm dalgaları savuşturdunuz!\n\nSkor: ${game.score}\nDalga: ${game.wave}`
+          : `Şehir düştü!\n\nSkor: ${game.score}\nDalga: ${game.wave}`;
+      modal.classList.add('active');
+    }
+
+    // Event listener'lar
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Kule tıklama kontrolü
+      let towerClicked = false;
+      for (const tower of game.towers) {
+        const dx = tower.x - x;
+        const dy = tower.y - y;
+        if (Math.sqrt(dx * dx + dy * dy) < 20) {
+          game.selectedTowerObj = tower;
+          towerClicked = true;
+          draw();
+          return;
+        }
+      }
+
+      // Yeni kule yerleştir
+      if (game.selectedTower && !towerClicked) {
+        const towerData = TOWER_TYPES[game.selectedTower];
+        
+        // Yol kontrolü
+        let onPath = false;
+        for (let i = 0; i < path.length - 1; i++) {
+          const p1 = path[i];
+          const p2 = path[i + 1];
+          const distToLine = Math.abs((p2.y - p1.y) * x - (p2.x - p1.x) * y + p2.x * p1.y - p2.y * p1.x) / 
+                            Math.sqrt((p2.y - p1.y) ** 2 + (p2.x - p1.x) ** 2);
+          if (distToLine < 30) {
+            onPath = true;
+            break;
+          }
+        }
+
+        if (onPath) {
+          alert('Kuleyi yola koyamazsınız!');
+          return;
+        }
+
+        // Kule çakışma kontrolü
+        for (const tower of game.towers) {
+          const dx = tower.x - x;
+          const dy = tower.y - y;
+          if (Math.sqrt(dx * dx + dy * dy) < 40) {
+            alert('Çok yakın! Başka bir yer seçin.');
+            return;
+          }
+        }
+
+        if (game.gold >= towerData.cost) {
+          game.gold -= towerData.cost;
+          game.towers.push(new Tower(game.selectedTower, x, y));
+          updateStats();
+        }
+      }
+    });
+
+    // Mobil dokunma desteği
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent('click', {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+    });
+
+    // Kule seçimi
+    document.querySelectorAll('.tower-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const towerType = btn.dataset.tower;
+        if (!towerType) return;
+
+        if (game.gold >= TOWER_TYPES[towerType].cost) {
+          document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          game.selectedTower = towerType;
+          game.selectedTowerObj = null;
+        }
+      });
+    });
+
+    // Kontrol butonları
+    document.getElementById('startWave').addEventListener('click', startWave);
+    
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      game.paused = !game.paused;
+      document.getElementById('pauseBtn').innerHTML = game.paused ? '▶️ Devam' : '⏸️ Duraklat';
+    });
+
+    document.getElementById('sellBtn').addEventListener('click', () => {
+      if (game.selectedTowerObj) {
+        const refund = Math.floor(game.selectedTowerObj.data.cost * game.selectedTowerObj.level * 0.5);
+        game.gold += refund;
+        const index = game.towers.indexOf(game.selectedTowerObj);
+        if (index > -1) game.towers.splice(index, 1);
+        game.selectedTowerObj = null;
+        updateStats();
+        draw();
+      }
+    });
+
+    // Başlat
+    updateStats();
+    requestAnimationFrame(gameLoop);
   </script>
 </body>
 </html></parameter>
-</invoke>
+</invoke>                                           
