@@ -1,443 +1,255 @@
 
-
-```html
 <invoke name="artifacts">
 <parameter name="command">create</parameter>
 <parameter name="type">text/html</parameter>
-<parameter name="id">advanced_city_builder</parameter>
-<parameter name="title">MetropolisX - Gelişmiş Şehir İnşa Simülasyonu</parameter>
+<parameter name="id">quantum_city_game</parameter>
+<parameter name="title">QuantumCity - Zaman Yolculuğu Şehir Yöneticisi</parameter>
 <parameter name="content"><!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>MetropolisX - Gelişmiş Şehir İnşa Simülasyonu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuantumCity - Zaman Yolculuğu Şehir Yöneticisi</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
-    :root {
-      --bg-dark: #0a0e27;
-      --bg-card: #1a1f3a;
-      --accent-primary: #00d9ff;
-      --accent-secondary: #7c3aed;
-      --accent-success: #10b981;
-      --accent-warning: #f59e0b;
-      --accent-danger: #ef4444;
-      --text-primary: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --border-color: #334155;
-    }
-
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
-      color: var(--text-primary);
-      overflow-x: hidden;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-    }
-
-    .stars {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle 3s infinite;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-
-    #app {
-      position: relative;
-      z-index: 1;
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    header {
-      background: rgba(26, 31, 58, 0.9);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 20px 30px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .logo-icon {
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      font-weight: bold;
-      box-shadow: 0 5px 20px rgba(0, 217, 255, 0.4);
+      padding: 20px;
+      color: #fff;
     }
 
-    .logo-text h1 {
-      font-size: 24px;
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    #game {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     }
 
-    .logo-text p {
-      font-size: 12px;
-      color: var(--text-secondary);
+    header {
+      text-align: center;
+      margin-bottom: 30px;
     }
 
-    .header-controls {
+    h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .subtitle {
+      opacity: 0.9;
+      font-size: 16px;
+    }
+
+    .timeline {
       display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 30px;
     }
 
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
+    .era-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 20px;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      border: 3px solid transparent;
       position: relative;
       overflow: hidden;
     }
 
-    .btn::before {
+    .era-card::before {
       content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #ffd700, #ffed4e);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .era-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .era-card.active {
+      border-color: #ffd700;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+
+    .era-card.active::before {
+      transform: scaleX(1);
+    }
+
+    .era-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .era-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .era-year {
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    .stats-panel {
       background: rgba(255, 255, 255, 0.2);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-primary), #0099cc);
-      color: white;
-      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
-    }
-
-    .btn-secondary {
-      background: rgba(148, 163, 184, 0.2);
-      color: var(--text-primary);
-      border: 1px solid var(--border-color);
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, var(--accent-danger), #dc2626);
-      color: white;
-      box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
-      gap: 20px;
-    }
-
-    .panel {
-      background: rgba(26, 31, 58, 0.9);
-      backdrop-filter: blur(20px);
       border-radius: 20px;
       padding: 20px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid var(--border-color);
-    }
-
-    .panel-header h2 {
-      font-size: 18px;
-      background: linear-gradient(135deg, var(--accent-primary), white);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .stats-grid {
+      margin-bottom: 30px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 15px;
-      margin-bottom: 20px;
     }
 
-    .stat-card {
-      background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(124, 58, 237, 0.1));
-      border-radius: 15px;
-      padding: 15px;
-      border: 1px solid rgba(0, 217, 255, 0.2);
-      transition: all 0.3s ease;
+    .stat {
+      text-align: center;
     }
 
-    .stat-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0, 217, 255, 0.2);
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-secondary);
+    .stat-icon {
+      font-size: 28px;
       margin-bottom: 5px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .stat-value {
       font-size: 24px;
       font-weight: bold;
-      background: linear-gradient(135deg, var(--accent-primary), white);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     }
 
-    .stat-delta {
+    .stat-label {
       font-size: 12px;
+      opacity: 0.9;
       margin-top: 5px;
     }
 
-    .stat-delta.positive { color: var(--accent-success); }
-    .stat-delta.negative { color: var(--accent-danger); }
-
-    .map-container {
-      background: radial-gradient(circle at center, rgba(0, 217, 255, 0.05), transparent);
-      border-radius: 15px;
+    .city-grid {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
       padding: 20px;
-      border: 1px solid rgba(0, 217, 255, 0.2);
-    }
-
-    .map-grid {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 4px;
       margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
     }
 
-    .map-cell {
+    .tile {
       aspect-ratio: 1;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      padding: 4px;
-    }
-
-    .map-cell:hover {
-      transform: scale(1.1);
-      z-index: 10;
-      box-shadow: 0 5px 20px rgba(0, 217, 255, 0.5);
-    }
-
-    .map-cell.selected {
-      border: 2px solid var(--accent-primary);
-      box-shadow: 0 0 20px rgba(0, 217, 255, 0.6);
-    }
-
-    .cell-icon {
-      font-size: 16px;
-      margin-bottom: 2px;
-    }
-
-    .cell-level {
-      font-size: 8px;
-      color: var(--text-secondary);
-    }
-
-    .zone-empty { background: rgba(15, 23, 42, 0.8); }
-    .zone-residential { background: linear-gradient(135deg, #065f46, #064e3b); }
-    .zone-commercial { background: linear-gradient(135deg, #1e3a8a, #1e40af); }
-    .zone-industrial { background: linear-gradient(135deg, #78350f, #92400e); }
-    .zone-park { background: linear-gradient(135deg, #14532d, #166534); }
-    .zone-utility { background: linear-gradient(135deg, #374151, #4b5563); }
-    .zone-education { background: linear-gradient(135deg, #6b21a8, #7c3aed); }
-    .zone-healthcare { background: linear-gradient(135deg, #be123c, #e11d48); }
-
-    .zone-actions {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .zone-btn {
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      background: rgba(15, 23, 42, 0.8);
       cursor: pointer;
       transition: all 0.3s ease;
-      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      position: relative;
     }
 
-    .zone-btn:hover {
-      transform: translateY(-2px);
-      border-color: var(--accent-primary);
-      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
+    .tile:hover {
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
     }
 
-    .zone-btn-icon {
-      font-size: 24px;
+    .tile-icon {
+      font-size: 32px;
       margin-bottom: 5px;
     }
 
-    .zone-btn-label {
-      font-size: 11px;
-      color: var(--text-secondary);
-    }
-
-    .zone-btn-cost {
+    .tile-name {
       font-size: 10px;
-      color: var(--accent-warning);
-      margin-top: 3px;
+      text-align: center;
+      opacity: 0.9;
     }
 
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: rgba(15, 23, 42, 0.8);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 8px;
+    .tile.locked {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
-      transition: width 0.5s ease;
-      border-radius: 10px;
+    .tile.locked:hover {
+      transform: none;
+      box-shadow: none;
     }
 
-    .building-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 400px;
-      overflow-y: auto;
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
     }
 
-    .building-card {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 15px;
+    .action-btn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border: none;
+      border-radius: 15px;
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-    }
-
-    .building-card:hover {
-      transform: translateX(5px);
-      border-color: var(--accent-primary);
-      box-shadow: 0 5px 15px rgba(0, 217, 255, 0.3);
-    }
-
-    .building-card.built {
-      border-color: var(--accent-success);
-      background: rgba(16, 185, 129, 0.1);
-    }
-
-    .building-header {
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      justify-content: center;
+      gap: 10px;
     }
 
-    .building-name {
-      font-weight: bold;
-      font-size: 14px;
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 
-    .building-icon {
-      font-size: 24px;
+    .action-btn:active {
+      transform: translateY(-1px);
     }
 
-    .building-desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
+    .action-btn.primary {
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      color: #333;
     }
 
-    .building-stats {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--accent-warning);
+    .action-btn.danger {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
     }
 
-    .event-log {
-      max-height: 400px;
+    .log {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 15px;
+      max-height: 150px;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
-    .event-entry {
-      background: rgba(15, 23, 42, 0.8);
-      border-left: 3px solid var(--accent-primary);
-      padding: 12px;
+    .log-entry {
+      padding: 8px;
+      margin-bottom: 5px;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 13px;
       animation: slideIn 0.3s ease;
     }
 
@@ -452,93 +264,83 @@
       }
     }
 
-    .event-entry.success { border-left-color: var(--accent-success); }
-    .event-entry.warning { border-left-color: var(--accent-warning); }
-    .event-entry.danger { border-left-color: var(--accent-danger); }
-
-    .event-time {
-      color: var(--text-secondary);
-      font-size: 10px;
-      margin-top: 5px;
-    }
-
     .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
       display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
       align-items: center;
       justify-content: center;
       z-index: 1000;
     }
 
-    .modal.active { display: flex; }
+    .modal.active {
+      display: flex;
+    }
 
     .modal-content {
-      background: var(--bg-card);
-      border-radius: 20px;
-      padding: 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 25px;
+      padding: 40px;
       max-width: 500px;
-      width: 90%;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     }
 
-    .modal-header {
-      font-size: 24px;
+    .modal-content h2 {
+      font-size: 36px;
       margin-bottom: 20px;
-      background: linear-gradient(135deg, var(--accent-primary), white);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    .modal-body {
-      margin-bottom: 20px;
-      color: var(--text-secondary);
+    .modal-content p {
+      font-size: 18px;
+      margin-bottom: 30px;
+      opacity: 0.9;
     }
 
-    .modal-actions {
+    .tile-info {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 10px;
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .progress-bar {
+      background: rgba(0, 0, 0, 0.3);
+      height: 20px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+      height: 100%;
+      transition: width 0.5s ease;
       display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .weather-indicator {
-      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 15px;
-      background: rgba(0, 217, 255, 0.1);
-      border-radius: 20px;
-      border: 1px solid rgba(0, 217, 255, 0.3);
-    }
-
-    .weather-icon {
-      font-size: 20px;
-    }
-
-    .tooltip {
-      position: absolute;
-      background: rgba(0, 0, 0, 0.95);
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
+      justify-content: center;
       font-size: 11px;
-      pointer-events: none;
-      z-index: 1000;
-      white-space: nowrap;
-      border: 1px solid var(--accent-primary);
+      font-weight: bold;
     }
 
-    @media (max-width: 1200px) {
-      .main-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 768px) {
+      .timeline {
+        flex-direction: column;
       }
       
-      .map-grid {
-        grid-template-columns: repeat(8, 1fr);
+      .city-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      h1 {
+        font-size: 32px;
       }
     }
 
@@ -547,614 +349,374 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.5);
+      background: rgba(0, 0, 0, 0.2);
       border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
-      background: var(--accent-primary);
+      background: rgba(255, 255, 255, 0.3);
       border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-secondary);
-    }
-
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--bg-card);
-      border: 1px solid var(--accent-primary);
-      border-radius: 15px;
-      padding: 15px 20px;
-      box-shadow: 0 10px 40px rgba(0, 217, 255, 0.5);
-      z-index: 2000;
-      animation: slideInRight 0.5s ease;
-    }
-
-    @keyframes slideInRight {
-      from {
-        transform: translateX(400px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="stars" id="stars"></div>
-
-  <div id="app">
+  <div id="game">
     <header>
-      <div class="logo">
-        <div class="logo-icon">🏙️</div>
-        <div class="logo-text">
-          <h1>MetropolisX</h1>
-          <p>Gelişmiş Şehir İnşa Simülasyonu</p>
-        </div>
-      </div>
-      <div class="header-controls">
-        <button class="btn btn-primary" id="btnNextTurn">
-          ⏭️ Sonraki Gün
-        </button>
-        <button class="btn btn-secondary" id="btnSave">💾 Kaydet</button>
-        <button class="btn btn-secondary" id="btnLoad">📁 Yükle</button>
-        <button class="btn btn-danger" id="btnReset">🔄 Yeni Oyun</button>
-      </div>
+      <h1>⏰ QuantumCity</h1>
+      <p class="subtitle">Zamanlar Arası Şehir Yöneticisi</p>
     </header>
 
-    <div class="main-grid">
-      <div class="panel">
-        <div class="panel-header">
-          <h2>📊 Şehir İstatistikleri</h2>
-          <div class="weather-indicator">
-            <span class="weather-icon" id="weatherIcon">☀️</span>
-            <span id="weatherText">Güneşli</span>
-          </div>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">💰 Bütçe</div>
-            <div class="stat-value" id="moneyValue">100000</div>
-            <div class="stat-delta" id="moneyDelta">+0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">👥 Nüfus</div>
-            <div class="stat-value" id="popValue">0</div>
-            <div class="stat-delta" id="popDelta">+0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">😊 Mutluluk</div>
-            <div class="stat-value" id="happyValue">50%</div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="happyBar" style="width: 50%"></div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">💼 İstihdam</div>
-            <div class="stat-value" id="jobValue">0%</div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="jobBar" style="width: 0%"></div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">🌿 Çevre</div>
-            <div class="stat-value" id="envValue">50</div>
-            <div class="progress-bar">
-              <div class="progress-fill" id="envBar" style="width: 50%"></div>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">📅 Gün</div>
-            <div class="stat-value" id="dayValue">1</div>
-            <div class="stat-delta" id="seasonValue">İlkbahar</div>
-          </div>
-        </div>
-
-        <div class="panel-header" style="margin-top: 20px;">
-          <h2>🏗️ Özel Binalar</h2>
-        </div>
-        <div class="building-list" id="buildingList"></div>
+    <div class="timeline">
+      <div class="era-card active" data-era="past">
+        <div class="era-icon">🏛️</div>
+        <div class="era-name">Geçmiş</div>
+        <div class="era-year">1900</div>
       </div>
-
-      <div class="panel">
-        <div class="panel-header">
-          <h2>🗺️ Şehir Haritası</h2>
-          <span id="mapInfo">10x8 Grid</span>
-        </div>
-        <div class="map-container">
-          <div class="map-grid" id="mapGrid"></div>
-          
-          <div class="panel-header" style="border-top: 2px solid var(--border-color); padding-top: 15px;">
-            <h2>🎯 Seçili Alan</h2>
-          </div>
-          <div id="selectedInfo" style="min-height: 150px; color: var(--text-secondary); padding: 15px; background: rgba(15, 23, 42, 0.5); border-radius: 10px;">
-            Haritadan bir kare seçin
-          </div>
-          
-          <div class="zone-actions" id="zoneActions" style="display: none; margin-top: 15px;">
-            <div class="zone-btn" data-zone="residential">
-              <div class="zone-btn-icon">🏠</div>
-              <div class="zone-btn-label">Konut</div>
-              <div class="zone-btn-cost">₺800</div>
-            </div>
-            <div class="zone-btn" data-zone="commercial">
-              <div class="zone-btn-icon">🏪</div>
-              <div class="zone-btn-label">Ticari</div>
-              <div class="zone-btn-cost">₺1200</div>
-            </div>
-            <div class="zone-btn" data-zone="industrial">
-              <div class="zone-btn-icon">🏭</div>
-              <div class="zone-btn-label">Sanayi</div>
-              <div class="zone-btn-cost">₺1500</div>
-            </div>
-            <div class="zone-btn" data-zone="park">
-              <div class="zone-btn-icon">🌳</div>
-              <div class="zone-btn-label">Park</div>
-              <div class="zone-btn-cost">₺600</div>
-            </div>
-            <div class="zone-btn" data-zone="utility">
-              <div class="zone-btn-icon">⚡</div>
-              <div class="zone-btn-label">Altyapı</div>
-              <div class="zone-btn-cost">₺1000</div>
-            </div>
-            <div class="zone-btn" data-zone="education">
-              <div class="zone-btn-icon">🎓</div>
-              <div class="zone-btn-label">Eğitim</div>
-              <div class="zone-btn-cost">₺2000</div>
-            </div>
-            <div class="zone-btn" data-zone="healthcare">
-              <div class="zone-btn-icon">🏥</div>
-              <div class="zone-btn-label">Sağlık</div>
-              <div class="zone-btn-cost">₺2500</div>
-            </div>
-            <div class="zone-btn" id="upgradeBtn">
-              <div class="zone-btn-icon">⬆️</div>
-              <div class="zone-btn-label">Yükselt</div>
-              <div class="zone-btn-cost" id="upgradeCost">₺1500</div>
-            </div>
-          </div>
-        </div>
+      <div class="era-card" data-era="present">
+        <div class="era-icon">🏙️</div>
+        <div class="era-name">Şimdi</div>
+        <div class="era-year">2025</div>
       </div>
-
-      <div class="panel">
-        <div class="panel-header">
-          <h2>📜 Olay Günlüğü</h2>
-          <button class="btn btn-secondary" id="btnClearLog" style="padding: 5px 15px; font-size: 12px;">Temizle</button>
-        </div>
-        <div class="event-log" id="eventLog"></div>
+      <div class="era-card" data-era="future">
+        <div class="era-icon">🚀</div>
+        <div class="era-name">Gelecek</div>
+        <div class="era-year">2150</div>
       </div>
+    </div>
+
+    <div class="stats-panel">
+      <div class="stat">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="money">1000</div>
+        <div class="stat-label">Para</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="population">0</div>
+        <div class="stat-label">Nüfus</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" id="energy">0</div>
+        <div class="stat-label">Enerji</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">🌟</div>
+        <div class="stat-value" id="happiness">50%</div>
+        <div class="stat-label">Mutluluk</div>
+      </div>
+    </div>
+
+    <div class="city-grid" id="cityGrid"></div>
+
+    <div class="tile-info" id="tileInfo" style="display: none;">
+      <strong id="tileName"></strong>
+      <div id="tileDetails"></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="tileProgress" style="width: 0%">0%</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="action-btn primary" id="nextTurn">
+        ⏭️ Sonraki Tur
+      </button>
+      <button class="action-btn" id="saveBtn">
+        💾 Kaydet
+      </button>
+      <button class="action-btn danger" id="resetBtn">
+        🔄 Yeniden Başla
+      </button>
+    </div>
+
+    <div class="log" id="log">
+      <div class="log-entry">🎮 QuantumCity'e hoş geldiniz! Şehrinizi zamanlar arası inşa edin.</div>
     </div>
   </div>
 
   <div class="modal" id="gameOverModal">
     <div class="modal-content">
-      <div class="modal-header">Oyun Sonu!</div>
-      <div class="modal-body" id="gameOverText"></div>
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="btnRestart">Yeni Oyun</button>
-      </div>
+      <h2 id="gameOverTitle">🎉</h2>
+      <p id="gameOverText"></p>
+      <button class="action-btn primary" onclick="location.reload()">Tekrar Oyna</button>
     </div>
   </div>
 
   <script>
-    const GRID_WIDTH = 10;
-    const GRID_HEIGHT = 8;
-    const STORAGE_KEY = 'metropolisX_save';
-
-    const ZONE_TYPES = {
-      empty: { icon: '⬜', name: 'Boş', cost: 0, housing: 0, jobs: 0, income: 0, pollution: 0, maintenance: 0 },
-      residential: { icon: '🏠', name: 'Konut', cost: 800, housing: 80, jobs: 10, income: 150, pollution: 3, maintenance: 20 },
-      commercial: { icon: '🏪', name: 'Ticari', cost: 1200, housing: 5, jobs: 50, income: 300, pollution: 8, maintenance: 35 },
-      industrial: { icon: '🏭', name: 'Sanayi', cost: 1500, housing: 0, jobs: 80, income: 450, pollution: 25, maintenance: 50 },
-      park: { icon: '🌳', name: 'Park', cost: 600, housing: 0, jobs: 5, income: 20, pollution: -15, maintenance: 15 },
-      utility: { icon: '⚡', name: 'Altyapı', cost: 1000, housing: 0, jobs: 20, income: 100, pollution: 12, maintenance: 40 },
-      education: { icon: '🎓', name: 'Eğitim', cost: 2000, housing: 0, jobs: 30, income: 80, pollution: 2, maintenance: 60 },
-      healthcare: { icon: '🏥', name: 'Sağlık', cost: 2500, housing: 0, jobs: 40, income: 120, pollution: 5, maintenance: 70 }
+    const BUILDINGS = {
+      past: [
+        { id: 'farm', icon: '🌾', name: 'Çiftlik', cost: 100, pop: 20, energy: -5, income: 50, happiness: 10 },
+        { id: 'workshop', icon: '🔨', name: 'Atölye', cost: 200, pop: 30, energy: -10, income: 80, happiness: 5 },
+        { id: 'market', icon: '🏪', name: 'Pazar', cost: 150, pop: 15, energy: 0, income: 60, happiness: 15 },
+        { id: 'church', icon: '⛪', name: 'Kilise', cost: 300, pop: 10, energy: 0, income: 20, happiness: 25 },
+        { id: 'mill', icon: '🏗️', name: 'Değirmen', cost: 250, pop: 25, energy: 10, income: 100, happiness: 8 }
+      ],
+      present: [
+        { id: 'house', icon: '🏠', name: 'Ev', cost: 300, pop: 100, energy: -20, income: 80, happiness: 20 },
+        { id: 'office', icon: '🏢', name: 'Ofis', cost: 500, pop: 200, energy: -40, income: 200, happiness: 10 },
+        { id: 'factory', icon: '🏭', name: 'Fabrika', cost: 800, pop: 150, energy: -60, income: 350, happiness: -10 },
+        { id: 'park', icon: '🌳', name: 'Park', cost: 200, pop: 0, energy: 5, income: 0, happiness: 40 },
+        { id: 'power', icon: '⚡', name: 'Enerji Santrali', cost: 1000, pop: 50, energy: 200, income: 100, happiness: -5 }
+      ],
+      future: [
+        { id: 'skyscraper', icon: '🏙️', name: 'Gökdelen', cost: 2000, pop: 500, energy: -100, income: 600, happiness: 25 },
+        { id: 'lab', icon: '🔬', name: 'Araştırma Merkezi', cost: 3000, pop: 300, energy: -80, income: 800, happiness: 35 },
+        { id: 'spaceport', icon: '🚀', name: 'Uzay Limanı', cost: 5000, pop: 200, energy: -150, income: 1500, happiness: 50 },
+        { id: 'dome', icon: '🛸', name: 'Biyoküre', cost: 4000, pop: 400, energy: 100, income: 500, happiness: 45 },
+        { id: 'quantum', icon: '⚛️', name: 'Kuantum Reaktör', cost: 8000, pop: 100, energy: 500, income: 1000, happiness: 30 }
+      ]
     };
-
-    const BUILDINGS = [
-      { id: 'stadium', name: 'Stadyum', icon: '🏟️', cost: 15000, effect: { happiness: 15 }, desc: 'Mutluluğu artırır', maintenance: 200 },
-      { id: 'university', name: 'Üniversite', icon: '🎓', cost: 20000, effect: { income: 1.15 }, desc: 'Geliri %15 artırır', maintenance: 300 },
-      { id: 'airport', name: 'Havalimanı', icon: '✈️', cost: 35000, effect: { income: 1.25, jobs: 200 }, desc: 'Geliri artırır, iş sağlar', maintenance: 500 },
-      { id: 'metro', name: 'Metro Sistemi', icon: '🚇', cost: 25000, effect: { happiness: 10, jobs: 100 }, desc: 'Ulaşımı geliştirir', maintenance: 350 },
-      { id: 'harbor', name: 'Liman', icon: '⚓', cost: 30000, effect: { income: 1.2, jobs: 150 }, desc: 'Ticaret merkezi', maintenance: 400 },
-      { id: 'tech', name: 'Teknoloji Merkezi', icon: '💻', cost: 40000, effect: { income: 1.3 }, desc: 'Ekonomiyi güçlendirir', maintenance: 600 }
-    ];
-
-    const WEATHER = [
-      { id: 'sunny', name: 'Güneşli', icon: '☀️', effect: { happiness: 2 } },
-      { id: 'rainy', name: 'Yağmurlu', icon: '🌧️', effect: { happiness: -1, pollution: -5 } },
-      { id: 'stormy', name: 'Fırtınalı', icon: '⛈️', effect: { happiness: -5, damage: 0.02 } },
-      { id: 'snowy', name: 'Karlı', icon: '❄️', effect: { happiness: -2, maintenance: 1.15 } }
-    ];
-
-    const SEASONS = ['İlkbahar', 'Yaz', 'Sonbahar', 'Kış'];
 
     let gameState = {
-      day: 1,
-      money: 100000,
+      currentEra: 'past',
+      turn: 1,
+      money: 1000,
       population: 0,
+      energy: 0,
       happiness: 50,
-      environment: 50,
-      grid: [],
-      selectedCell: null,
-      buildings: {},
-      weather: WEATHER[0],
-      season: 0,
-      history: { money: [], population: [], happiness: [] }
+      cities: {
+        past: Array(15).fill(null),
+        present: Array(15).fill(null),
+        future: Array(15).fill(null)
+      },
+      selectedTile: null,
+      unlockedEras: { past: true, present: false, future: false }
     };
 
-    function initGame() {
-      createStars();
-      gameState.grid = Array(GRID_HEIGHT).fill().map((_, y) => 
-        Array(GRID_WIDTH).fill().map((_, x) => ({
-          x, y, zone: 'empty', level: 1
-        }))
-      );
-      renderMap();
-      renderBuildings();
+    function init() {
+      renderGrid();
       updateStats();
-      addLog('🎉 MetropolisX\'e hoş geldiniz! Şehrinizi inşa edin.', 'success');
+      setupEventListeners();
     }
 
-    function createStars() {
-      const container = document.getElementById('stars');
-      for (let i = 0; i < 100; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 3 + 's';
-        container.appendChild(star);
-      }
-    }
-
-    function renderMap() {
-      const grid = document.getElementById('mapGrid');
+    function renderGrid() {
+      const grid = document.getElementById('cityGrid');
       grid.innerHTML = '';
       
-      gameState.grid.forEach((row, y) => {
-        row.forEach((cell, x) => {
-          const div = document.createElement('div');
-          div.className = `map-cell zone-${cell.zone}`;
-          if (gameState.selectedCell && gameState.selectedCell.x === x && gameState.selectedCell.y === y) {
-            div.classList.add('selected');
-          }
-          
-          const zoneInfo = ZONE_TYPES[cell.zone];
-          div.innerHTML = `
-            <div class="cell-icon">${zoneInfo.icon}</div>
-            ${cell.zone !== 'empty' ? `<div class="cell-level">Lv${cell.level}</div>` : ''}
+      const currentCity = gameState.cities[gameState.currentEra];
+      const buildings = BUILDINGS[gameState.currentEra];
+      
+      currentCity.forEach((building, index) => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        
+        if (building) {
+          const buildingData = buildings.find(b => b.id === building.id);
+          tile.innerHTML = `
+            <div class="tile-icon">${buildingData.icon}</div>
+            <div class="tile-name">${buildingData.name}</div>
           `;
-          
-          div.addEventListener('click', () => selectCell(cell));
-          grid.appendChild(div);
-        });
-      });
-    }
-
-    function selectCell(cell) {
-      gameState.selectedCell = cell;
-      renderMap();
-      
-      const zoneInfo = ZONE_TYPES[cell.zone];
-      const levelMultiplier = cell.level * 0.5 + 0.5;
-      
-      document.getElementById('selectedInfo').innerHTML = `
-        <h3 style="margin-bottom: 10px; color: var(--accent-primary);">${zoneInfo.name} (${cell.x},${cell.y})</h3>
-        <p><strong>Seviye:</strong> ${cell.level}</p>
-        <p><strong>Barınma:</strong> ${Math.round(zoneInfo.housing * levelMultiplier)}</p>
-        <p><strong>İş:</strong> ${Math.round(zoneInfo.jobs * levelMultiplier)}</p>
-        <p><strong>Gelir:</strong> ₺${Math.round(zoneInfo.income * levelMultiplier)}/gün</p>
-        <p><strong>Kirlilik:</strong> ${zoneInfo.pollution > 0 ? '+' : ''}${zoneInfo.pollution}</p>
-        <p><strong>Bakım:</strong> ₺${Math.round(zoneInfo.maintenance * levelMultiplier)}/gün</p>
-      `;
-      
-      document.getElementById('zoneActions').style.display = 'grid';
-      document.getElementById('upgradeCost').textContent = `₺${1500 * cell.level}`;
-    }
-
-    function setZone(zone) {
-      const cell = gameState.selectedCell;
-      if (!cell) return;
-      
-      const zoneInfo = ZONE_TYPES[zone];
-      if (gameState.money < zoneInfo.cost) {
-        addLog(`❌ Yetersiz bütçe! ${zoneInfo.cost} TL gerekli.`, 'danger');
-        showNotification('Yetersiz Bütçe!', 'danger');
-        return;
-      }
-      
-      gameState.money -= zoneInfo.cost;
-      cell.zone = zone;
-      cell.level = 1;
-      
-      addLog(`✅ ${zoneInfo.name} bölgesi oluşturuldu (${cell.x},${cell.y})`, 'success');
-      renderMap();
-      selectCell(cell);
-      updateStats();
-    }
-
-    function upgradeCell() {
-      const cell = gameState.selectedCell;
-      if (!cell || cell.zone === 'empty') return;
-      
-      if (cell.level >= 5) {
-        addLog('⚠️ Maksimum seviyeye ulaşıldı!', 'warning');
-        return;
-      }
-      
-      const cost = 1500 * cell.level;
-      if (gameState.money < cost) {
-        addLog(`❌ Yükseltme için ${cost} TL gerekli!`, 'danger');
-        return;
-      }
-      
-      gameState.money -= cost;
-      cell.level++;
-      addLog(`⬆️ Bölge seviye ${cell.level}'e yükseltildi!`, 'success');
-      renderMap();
-      selectCell(cell);
-      updateStats();
-    }
-
-    function renderBuildings() {
-      const list = document.getElementById('buildingList');
-      list.innerHTML = '';
-      
-      BUILDINGS.forEach(building => {
-        const isBuilt = gameState.buildings[building.id];
-        const card = document.createElement('div');
-        card.className = `building-card ${isBuilt ? 'built' : ''}`;
-        
-        card.innerHTML = `
-          <div class="building-header">
-            <span class="building-name">${building.name}</span>
-            <span class="building-icon">${building.icon}</span>
-          </div>
-          <div class="building-desc">${building.desc}</div>
-          <div class="building-stats">
-            <span>Maliyet: ₺${building.cost.toLocaleString()}</span>
-            <span>${isBuilt ? '✅ Kurulu' : '🔨 Kur'}</span>
-          </div>
-        `;
-        
-        if (!isBuilt) {
-          card.addEventListener('click', () => buildBuilding(building));
+          tile.onclick = () => selectTile(index, buildingData);
+        } else {
+          tile.innerHTML = `
+            <div class="tile-icon">➕</div>
+            <div class="tile-name">Boş</div>
+          `;
+          tile.onclick = () => showBuildMenu(index);
         }
         
-        list.appendChild(card);
+        grid.appendChild(tile);
       });
     }
 
-    function buildBuilding(building) {
-      if (gameState.buildings[building.id]) return;
+    function selectTile(index, building) {
+      gameState.selectedTile = index;
+      document.getElementById('tileInfo').style.display = 'block';
+      document.getElementById('tileName').textContent = building.name;
       
+      const level = gameState.cities[gameState.currentEra][index].level || 1;
+      const maxLevel = 5;
+      
+      document.getElementById('tileDetails').innerHTML = `
+        <div style="margin-top: 10px;">
+          <div>👥 Nüfus: +${building.pop * level}</div>
+          <div>⚡ Enerji: ${building.energy * level}</div>
+          <div>💰 Gelir: +${building.income * level}/tur</div>
+          <div>😊 Mutluluk: ${building.happiness > 0 ? '+' : ''}${building.happiness}%</div>
+          <div style="margin-top: 10px;">📊 Seviye: ${level}/${maxLevel}</div>
+        </div>
+      `;
+      
+      const progress = (level / maxLevel) * 100;
+      document.getElementById('tileProgress').style.width = progress + '%';
+      document.getElementById('tileProgress').textContent = `${level}/${maxLevel}`;
+    }
+
+    function showBuildMenu(index) {
+      const buildings = BUILDINGS[gameState.currentEra];
+      const menu = confirm(
+        `Bu kareye ne inşa etmek istersiniz?\n\n` +
+        buildings.map((b, i) => 
+          `${i + 1}. ${b.icon} ${b.name} - ${b.cost} para\n` +
+          `   Nüfus: +${b.pop} | Gelir: +${b.income}/tur | Mutluluk: ${b.happiness}%`
+        ).join('\n\n') +
+        `\n\nBir bina seçmek için 1-${buildings.length} arası sayı girin (İptal için ESC)`
+      );
+      
+      if (menu) {
+        const choice = prompt(`Bina numarası (1-${buildings.length}):`);
+        const buildingIndex = parseInt(choice) - 1;
+        
+        if (buildingIndex >= 0 && buildingIndex < buildings.length) {
+          buildBuilding(index, buildings[buildingIndex]);
+        }
+      }
+    }
+
+    function buildBuilding(tileIndex, building) {
       if (gameState.money < building.cost) {
-        addLog(`❌ ${building.name} için ${building.cost} TL gerekli!`, 'danger');
+        addLog(`❌ Yetersiz para! ${building.name} için ${building.cost} para gerekli.`);
         return;
       }
       
       gameState.money -= building.cost;
-      gameState.buildings[building.id] = true;
-      addLog(`🏗️ ${building.name} inşa edildi!`, 'success');
-      showNotification(`${building.name} Kuruldu!`, 'success');
-      renderBuildings();
+      gameState.cities[gameState.currentEra][tileIndex] = { 
+        id: building.id, 
+        level: 1 
+      };
+      
+      addLog(`✅ ${building.icon} ${building.name} inşa edildi!`);
+      renderGrid();
       updateStats();
     }
 
     function nextTurn() {
-      gameState.day++;
+      gameState.turn++;
       
-      // Mevsim ve hava
-      gameState.season = Math.floor((gameState.day - 1) / 30) % 4;
-      if (Math.random() < 0.3) {
-        gameState.weather = WEATHER[Math.floor(Math.random() * WEATHER.length)];
-      }
+      // Gelir hesapla
+      let totalIncome = 0;
+      let totalPop = 0;
+      let totalEnergy = 0;
+      let happinessChange = 0;
       
-      // Hesaplamalar
-      let totalHousing = 0, totalJobs = 0, totalIncome = 0, totalMaint = 0, totalPollution = 0;
-      
-      gameState.grid.forEach(row => {
-        row.forEach(cell => {
-          const zone = ZONE_TYPES[cell.zone];
-          const mult = cell.level * 0.5 + 0.5;
-          totalHousing += zone.housing * mult;
-          totalJobs += zone.jobs * mult;
-          totalIncome += zone.income * mult;
-          totalMaint += zone.maintenance * mult;
-          totalPollution += zone.pollution;
+      Object.keys(gameState.cities).forEach(era => {
+        if (!gameState.unlockedEras[era]) return;
+        
+        gameState.cities[era].forEach(tile => {
+          if (tile) {
+            const building = BUILDINGS[era].find(b => b.id === tile.id);
+            const level = tile.level || 1;
+            totalIncome += building.income * level;
+            totalPop += building.pop * level;
+            totalEnergy += building.energy * level;
+            happinessChange += building.happiness;
+          }
         });
       });
       
-      // Bina bonusları
-      let incomeMultiplier = 1;
-      let happinessBonus = 0;
-      let jobsBonus = 0;
-      let maintBonus = 0;
+      gameState.money += totalIncome;
+      gameState.population = totalPop;
+      gameState.energy = totalEnergy;
+      gameState.happiness = Math.max(0, Math.min(100, gameState.happiness + (happinessChange / 10)));
       
-      Object.keys(gameState.buildings).forEach(id => {
-        const building = BUILDINGS.find(b => b.id === id);
-        if (building.effect.income) incomeMultiplier *= building.effect.income;
-        if (building.effect.happiness) happinessBonus += building.effect.happiness;
-        if (building.effect.jobs) jobsBonus += building.effect.jobs;
-        maintBonus += building.maintenance;
-      });
-      
-      totalIncome *= incomeMultiplier;
-      totalJobs += jobsBonus;
-      totalMaint += maintBonus;
-      
-      // Nüfus
-      const oldPop = gameState.population;
-      const targetPop = Math.min(totalHousing, totalHousing * (gameState.happiness / 100));
-      gameState.population += (targetPop - gameState.population) * 0.3;
-      gameState.population = Math.max(0, Math.round(gameState.population));
-      
-      // İstihdam
-      const employment = totalJobs > 0 ? Math.min(100, (gameState.population / totalJobs) * 100) : 0;
-      
-      // Mutluluk
-      let happyChange = 0;
-      happyChange += employment > 90 ? 5 : employment > 70 ? 2 : employment > 50 ? 0 : -5;
-      happyChange += gameState.environment > 60 ? 3 : gameState.environment < 30 ? -5 : 0;
-      happyChange += happinessBonus;
-      happyChange += gameState.weather.effect.happiness || 0;
-      
-      gameState.happiness = Math.max(0, Math.min(100, gameState.happiness + happyChange));
-      
-      // Çevre
-      const envChange = -totalPollution * 0.1 + (gameState.weather.effect.pollution || 0);
-      gameState.environment = Math.max(0, Math.min(100, gameState.environment + envChange));
-      
-      // Para
-      const netIncome = totalIncome - totalMaint;
-      gameState.money += netIncome;
-      
-      // Felaket
-      if (gameState.weather.effect.damage && Math.random() < gameState.weather.effect.damage) {
-        const damage = Math.round(totalIncome * 0.3);
-        gameState.money -= damage;
-        addLog(`⚠️ Fırtına hasar verdi! -₺${damage}`, 'danger');
+      // Enerji kontrolü
+      if (gameState.energy < 0) {
+        gameState.happiness -= 5;
+        addLog(`⚠️ Enerji yetersiz! Mutluluk düştü.`);
       }
       
-      // Log
-      addLog(`📅 Gün ${gameState.day} | ${SEASONS[gameState.season]} | ${gameState.weather.name}`, 'info');
-      if (netIncome > 0) {
-        addLog(`💰 Günlük gelir: +₺${Math.round(netIncome)}`, 'success');
-      } else {
-        addLog(`💸 Günlük gider: ₺${Math.round(Math.abs(netIncome))}`, 'danger');
+      // Dönem kilidi aç
+      if (gameState.turn >= 10 && !gameState.unlockedEras.present) {
+        gameState.unlockedEras.present = true;
+        addLog(`🎉 Şimdi dönemi açıldı!`);
+        document.querySelector('[data-era="present"]').style.opacity = '1';
       }
       
-      // Oyun sonu
-      if (gameState.money < -50000) {
-        gameOver('İflas ettiniz! Şehriniz çöktü.');
+      if (gameState.turn >= 20 && !gameState.unlockedEras.future) {
+        gameState.unlockedEras.future = true;
+        addLog(`🚀 Gelecek dönemi açıldı!`);
+        document.querySelector('[data-era="future"]').style.opacity = '1';
       }
-      if (gameState.happiness < 10) {
-        gameOver('Halk ayaklandı! Mutluluk çok düşük.');
-      }
-      if (gameState.population > 5000) {
-        gameOver(`Tebrikler! ${gameState.population} nüfuslu büyük bir şehir kurdunuz!`);
+      
+      addLog(`📅 Tur ${gameState.turn} - Gelir: +${totalIncome} para`);
+      
+      // Oyun sonu kontrolleri
+      if (gameState.money < 0) {
+        gameOver('İflas ettiniz! Paranız bitti.');
+      } else if (gameState.happiness <= 0) {
+        gameOver('Halk mutsuz! Şehir terk edildi.');
+      } else if (gameState.population >= 5000) {
+        gameOver('Tebrikler! 5000+ nüfuslu mega şehir kurdunuz! 🎉');
       }
       
       updateStats();
     }
 
     function updateStats() {
-      document.getElementById('moneyValue').textContent = '₺' + Math.round(gameState.money).toLocaleString();
-      document.getElementById('popValue').textContent = gameState.population.toLocaleString();
-      document.getElementById('happyValue').textContent = Math.round(gameState.happiness) + '%';
-      document.getElementById('happyBar').style.width = gameState.happiness + '%';
-      document.getElementById('envValue').textContent = Math.round(gameState.environment);
-      document.getElementById('envBar').style.width = gameState.environment + '%';
-      document.getElementById('dayValue').textContent = gameState.day;
-      document.getElementById('seasonValue').textContent = SEASONS[gameState.season];
-      document.getElementById('weatherIcon').textContent = gameState.weather.icon;
-      document.getElementById('weatherText').textContent = gameState.weather.name;
-      
-      // İstihdam
-      let totalJobs = 0;
-      gameState.grid.forEach(row => {
-        row.forEach(cell => {
-          const zone = ZONE_TYPES[cell.zone];
-          totalJobs += zone.jobs * (cell.level * 0.5 + 0.5);
-        });
-      });
-      const employment = totalJobs > 0 ? Math.min(100, (gameState.population / totalJobs) * 100) : 0;
-      document.getElementById('jobValue').textContent = Math.round(employment) + '%';
-      document.getElementById('jobBar').style.width = employment + '%';
+      document.getElementById('money').textContent = Math.round(gameState.money);
+      document.getElementById('population').textContent = gameState.population;
+      document.getElementById('energy').textContent = gameState.energy;
+      document.getElementById('happiness').textContent = Math.round(gameState.happiness) + '%';
     }
 
-    function addLog(message, type = 'info') {
-      const log = document.getElementById('eventLog');
+    function addLog(message) {
+      const log = document.getElementById('log');
       const entry = document.createElement('div');
-      entry.className = `event-entry ${type}`;
-      entry.innerHTML = `
-        ${message}
-        <div class="event-time">Gün ${gameState.day}</div>
-      `;
+      entry.className = 'log-entry';
+      entry.textContent = message;
       log.insertBefore(entry, log.firstChild);
       
-      while (log.children.length > 50) {
+      while (log.children.length > 20) {
         log.removeChild(log.lastChild);
       }
     }
 
-    function showNotification(message, type) {
-      const notif = document.createElement('div');
-      notif.className = 'notification';
-      notif.textContent = message;
-      document.body.appendChild(notif);
-      
-      setTimeout(() => {
-        notif.style.animation = 'slideInRight 0.5s ease reverse';
-        setTimeout(() => notif.remove(), 500);
-      }, 3000);
-    }
-
     function gameOver(message) {
-      document.getElementById('gameOverText').textContent = message;
+      document.getElementById('gameOverTitle').textContent = 
+        gameState.population >= 5000 ? '🎉 Kazandınız!' : '💔 Oyun Bitti';
+      document.getElementById('gameOverText').textContent = 
+        `${message}\n\nTur: ${gameState.turn} | Nüfus: ${gameState.population} | Para: ${Math.round(gameState.money)}`;
       document.getElementById('gameOverModal').classList.add('active');
     }
 
-    function saveGame() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(gameState));
-        addLog('💾 Oyun kaydedildi!', 'success');
-        showNotification('Oyun Kaydedildi!', 'success');
-      } catch (e) {
-        addLog('❌ Kayıt hatası!', 'danger');
-      }
-    }
-
-    function loadGame() {
-      try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          gameState = JSON.parse(saved);
-          renderMap();
-          renderBuildings();
-          updateStats();
-          addLog('📁 Oyun yüklendi!', 'success');
-          showNotification('Oyun Yüklendi!', 'success');
-        } else {
-          addLog('⚠️ Kayıtlı oyun bulunamadı!', 'warning');
+    function setupEventListeners() {
+      document.getElementById('nextTurn').onclick = nextTurn;
+      
+      document.getElementById('saveBtn').onclick = () => {
+        localStorage.setItem('quantumCity', JSON.stringify(gameState));
+        addLog('💾 Oyun kaydedildi!');
+      };
+      
+      document.getElementById('resetBtn').onclick = () => {
+        if (confirm('Oyunu sıfırlamak istediğinize emin misiniz?')) {
+          location.reload();
         }
-      } catch (e) {
-        addLog('❌ Yükleme hatası!', 'danger');
+      };
+      
+      document.querySelectorAll('.era-card').forEach(card => {
+        const era = card.dataset.era;
+        if (!gameState.unlockedEras[era]) {
+          card.style.opacity = '0.5';
+        }
+        
+        card.onclick = () => {
+          if (!gameState.unlockedEras[era]) {
+            addLog(`🔒 Bu dönem henüz açılmadı!`);
+            return;
+          }
+          
+          gameState.currentEra = era;
+          document.querySelectorAll('.era-card').forEach(c => c.classList.remove('active'));
+          card.classList.add('active');
+          renderGrid();
+          document.getElementById('tileInfo').style.display = 'none';
+        };
+      });
+      
+      // Kayıtlı oyun var mı kontrol et
+      const saved = localStorage.getItem('quantumCity');
+      if (saved) {
+        if (confirm('Kayıtlı oyun bulundu! Yüklemek ister misiniz?')) {
+          gameState = JSON.parse(saved);
+          renderGrid();
+          updateStats();
+          addLog('📁 Oyun yüklendi!');
+        }
       }
     }
 
-    function resetGame() {
-      if (confirm('Yeni oyun başlatılsın mı? Mevcut ilerleme kaybolacak!')) {
-        initGame();
-        document.getElementById('gameOverModal').classList.remove('active');
-      }
-    }
-
-    // Event listeners
-    document.getElementById('btnNextTurn').addEventListener('click', nextTurn);
-    document.getElementById('btnSave').addEventListener('click', saveGame);
-    document.getElementById('btnLoad').addEventListener('click', loadGame);
-    document.getElementById('btnReset').addEventListener('click', resetGame);
-    document.getElementById('btnRestart').addEventListener('click', resetGame);
-    document.getElementById('btnClearLog').addEventListener('click', () => {
-      document.getElementById('eventLog').innerHTML = '';
-    });
-    document.getElementById('upgradeBtn').addEventListener('click', upgradeCell);
-    
-    document.querySelectorAll('.zone-btn[data-zone]').forEach(btn => {
-      btn.addEventListener('click', () => setZone(btn.dataset.zone));
-    });
-
-    // Başlat
-    initGame();
+    init();
   </script>
 </body>
 </html></parameter>
+</invoke>
