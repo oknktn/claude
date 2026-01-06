@@ -1,1032 +1,524 @@
-
-<invoke name="artifacts">
-<parameter name="command">create</parameter>
-<parameter name="type">text/html</parameter>
-<parameter name="id">mobile_tower_defense</parameter>
-<parameter name="title">Crystal Defenders - Mobil Tower Defense</parameter>
-<parameter name="content"><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Crystal Defenders - Tower Defense</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Elmas'ın Dünyası ✨ Ultimate AI Assistant</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: #fff;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    <style>
+        :root {
+            --bg-color: #fdfbf7;
+            --sidebar-bg: rgba(236, 234, 228, 0.9);
+            --accent-sage: #6b705c;
+            --deep-forest: #414833;
+            --gold-leaf: #b59f6d;
+            --glass: rgba(255, 255, 255, 0.7);
+            --shadow: 0 8px 32px 0 rgba(181, 159, 109, 0.15);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+        }
 
-    #game-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 100vw;
-      height: 100vh;
-      position: relative;
-    }
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg-color); 
+            color: #2f3e46; 
+            height: 100vh; 
+            display: flex; 
+            overflow: hidden;
+        }
 
-    /* Header */
-    .game-header {
-      background: rgba(0, 0, 0, 0.5);
-      padding: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      backdrop-filter: blur(10px);
-      border-bottom: 2px solid rgba(0, 255, 255, 0.3);
-      flex-shrink: 0;
-    }
+        /* --- SIDEBAR --- */
+        .sidebar { 
+            width: 380px; 
+            background: var(--sidebar-bg); 
+            backdrop-filter: blur(20px); 
+            height: 100%; 
+            border-right: 1px solid rgba(181, 159, 109, 0.2); 
+            display: flex; 
+            flex-direction: column; 
+            padding: 30px; 
+            overflow-y: auto; 
+            z-index: 10;
+        }
 
-    .stat {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 16px;
-      font-weight: bold;
-    }
+        .logo-area { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 1.8rem; 
+            color: var(--deep-forest); 
+            margin-bottom: 35px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 700; 
+            cursor: pointer;
+        }
 
-    .stat-icon {
-      font-size: 20px;
-    }
+        /* AI Card Styling */
+        .ai-living-card {
+            background: linear-gradient(145deg, #ffffff, #fcf8ee);
+            border-radius: var(--radius-lg); 
+            padding: 25px; 
+            border: 1px solid rgba(181, 159, 109, 0.3);
+            box-shadow: var(--shadow); 
+            margin-bottom: 30px; 
+            position: relative;
+            overflow: hidden;
+        }
 
-    .header-left, .header-right {
-      display: flex;
-      gap: 15px;
-    }
+        .ai-living-card.loading::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(181, 159, 109, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
 
-    .wave-info {
-      text-align: center;
-      font-size: 14px;
-    }
+        .ai-title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--deep-forest); display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .ai-content { font-size: 0.95rem; line-height: 1.6; color: #4a4a4a; font-style: italic; margin-bottom: 20px; }
+        
+        .ai-suggestion-btn {
+            background: var(--deep-forest); color: #fff; border: none; padding: 14px; 
+            border-radius: var(--radius-md); font-size: 0.9rem; cursor: pointer; width: 100%;
+            display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600;
+        }
 
-    .wave-number {
-      font-size: 18px;
-      font-weight: bold;
-      color: #00ffff;
-    }
+        .ai-suggestion-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(65, 72, 51, 0.3); }
 
-    /* Canvas */
-    #game-canvas {
-      flex: 1;
-      background: #0f3460;
-      position: relative;
-      touch-action: none;
-      cursor: crosshair;
-    }
+        /* Yaşam Dengesi */
+        .section-header { font-weight: 700; font-size: 0.85rem; color: var(--accent-sage); text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 15px; }
+        
+        .balance-box { background: rgba(255,255,255,0.5); border-radius: var(--radius-md); padding: 20px; border: 1px solid rgba(255,255,255,0.5); }
+        .balance-item { margin-bottom: 15px; }
+        .balance-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; color: var(--deep-forest); }
+        .balance-bar { height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; }
+        .balance-fill { height: 100%; background: var(--gold-leaf); border-radius: 3px; transition: width 1s ease-out; }
 
-    /* Tower Menu */
-    .tower-menu {
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 15px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      border-top: 2px solid rgba(0, 255, 255, 0.3);
-      flex-shrink: 0;
-    }
+        /* Başarı Rozetleri */
+        .badge-container { display: flex; gap: 15px; justify-content: space-between; padding: 10px 0; }
+        .badge { 
+            width: 60px; height: 60px; border-radius: 20px; background: #fff; 
+            display: flex; align-items: center; justify-content: center; 
+            color: #d1d1d1; box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            font-size: 1.4rem; position: relative;
+        }
+        .badge.active { color: var(--gold-leaf); background: #fff; transform: scale(1.1); box-shadow: 0 8px 20px rgba(181, 159, 109, 0.2); border: 1px solid var(--gold-leaf); }
 
-    .tower-btn {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      border: 2px solid rgba(0, 255, 255, 0.5);
-      border-radius: 12px;
-      padding: 12px 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-align: center;
-      position: relative;
-      min-height: 85px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; padding: 60px; overflow-y: auto; background-color: var(--bg-color); }
+        .main-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--deep-forest); margin-bottom: 10px; }
+        .breadcrumbs { font-size: 1.1rem; color: var(--gold-leaf); margin-bottom: 40px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px; }
 
-    .tower-btn:active {
-      transform: scale(0.95);
-    }
+        /* Planner UI */
+        .planner-container { max-width: 850px; animation: fadeIn 0.6s ease; }
+        .progress-card { background: #fff; padding: 35px; border-radius: 30px; box-shadow: var(--shadow); margin-bottom: 40px; }
+        
+        .hour-row { 
+            display: flex; align-items: center; background: #fff; padding: 20px 25px; 
+            border-radius: 22px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border: 1px solid transparent;
+        }
+        .hour-row:hover { border-color: var(--gold-leaf); transform: translateX(10px); background: #fffdf9; }
+        .hour-row.completed { opacity: 0.6; background: #f9f9f9; }
+        
+        .hour-label { width: 80px; font-weight: 700; color: var(--accent-sage); font-size: 1.1rem; }
+        .check-circle { 
+            width: 32px; height: 32px; border: 2.5px solid var(--gold-leaf); 
+            border-radius: 12px; margin-right: 25px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; color: transparent;
+        }
+        .check-circle.checked { background: var(--gold-leaf); color: #fff; }
 
-    .tower-btn.selected {
-      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-      border-color: #00ffff;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
-    }
+        .task-input { 
+            flex: 1; border: none; outline: none; font-family: inherit; 
+            font-size: 1.2rem; background: transparent; color: var(--deep-forest);
+            font-weight: 500;
+        }
+        .task-input::placeholder { color: #d0d0d0; font-style: italic; font-weight: 400; }
 
-    .tower-btn.disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+        /* Calendar Grid */
+        .calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .month-card { 
+            background: #fff; padding: 40px 20px; border-radius: 25px; text-align: center; 
+            cursor: pointer; box-shadow: var(--shadow); border: 1px solid transparent;
+        }
+        .month-card:hover { transform: translateY(-10px); border-color: var(--gold-leaf); }
+        
+        .cal-day { 
+            aspect-ratio: 1; background: #fff; border-radius: 20px; display: flex; 
+            flex-direction: column; align-items: center; justify-content: center; 
+            cursor: pointer; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+        .cal-day:hover { background: var(--sidebar-bg); transform: scale(1.05); }
+        .cal-dot { width: 6px; height: 6px; background: var(--gold-leaf); border-radius: 50%; position: absolute; bottom: 12px; }
 
-    .tower-icon {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
+        /* Animations */
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tower-name {
-      font-size: 11px;
-      font-weight: bold;
-      margin-bottom: 3px;
-    }
+        /* Toast */
+        .toast { 
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); 
+            background: var(--deep-forest); color: #fff; padding: 18px 45px; 
+            border-radius: 50px; opacity: 0; visibility: hidden; z-index: 2000; font-weight: 700;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+        .toast.show { opacity: 1; visibility: visible; bottom: 60px; }
 
-    .tower-cost {
-      font-size: 12px;
-      color: #ffd700;
-      font-weight: bold;
-    }
+        /* Modal */
+        .modal { 
+            position: fixed; inset: 0; background: rgba(65, 72, 51, 0.4); 
+            backdrop-filter: blur(8px); display: none; align-items: center; 
+            justify-content: center; z-index: 3000; 
+        }
+        .modal-content { 
+            background: #fff; padding: 45px; border-radius: 35px; width: 450px; 
+            max-width: 90%; box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
 
-    .tower-stats {
-      font-size: 9px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 3px;
-    }
-
-    /* Control Buttons */
-    .controls {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .control-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      border-radius: 10px;
-      padding: 12px 20px;
-      color: white;
-      font-weight: bold;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex: 1;
-      justify-content: center;
-      max-width: 150px;
-    }
-
-    .control-btn:active {
-      transform: scale(0.95);
-    }
-
-    .control-btn.start {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    }
-
-    .control-btn.pause {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 90%;
-      width: 400px;
-      text-align: center;
-      border: 3px solid rgba(0, 255, 255, 0.5);
-    }
-
-    .modal-content h2 {
-      font-size: 32px;
-      margin-bottom: 15px;
-      color: #00ffff;
-    }
-
-    .modal-content p {
-      font-size: 18px;
-      margin-bottom: 25px;
-      opacity: 0.9;
-    }
-
-    .modal-btn {
-      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-      border: none;
-      border-radius: 12px;
-      padding: 15px 30px;
-      color: white;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    /* Tooltip */
-    .tooltip {
-      position: absolute;
-      background: rgba(0, 0, 0, 0.9);
-      border: 2px solid #00ffff;
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 12px;
-      pointer-events: none;
-      z-index: 100;
-      display: none;
-      max-width: 200px;
-    }
-
-    /* Health Bar */
-    .enemy-health {
-      position: absolute;
-      height: 4px;
-      background: #ff0000;
-      border-radius: 2px;
-      transition: width 0.2s ease;
-    }
-
-    /* Range indicator */
-    .range-indicator {
-      position: absolute;
-      border: 2px dashed rgba(0, 255, 255, 0.5);
-      border-radius: 50%;
-      pointer-events: none;
-      display: none;
-    }
-
-    @media (max-width: 768px) {
-      .tower-menu {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        padding: 10px;
-      }
-
-      .tower-btn {
-        padding: 10px 5px;
-        min-height: 75px;
-      }
-
-      .tower-icon {
-        font-size: 24px;
-      }
-
-      .tower-name {
-        font-size: 10px;
-      }
-
-      .tower-cost {
-        font-size: 11px;
-      }
-
-      .stat {
-        font-size: 14px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header-left, .header-right {
-        gap: 10px;
-      }
-
-      .wave-info {
-        font-size: 12px;
-      }
-
-      .control-btn {
-        padding: 10px 15px;
-        font-size: 13px;
-      }
-    }
-  </style>
+        /* Mobile Styles */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #eee; }
+            .main-content { padding: 30px; }
+            .main-title { font-size: 2.2rem; }
+        }
+    </style>
 </head>
 <body>
-  <div id="game-container">
-    <div class="game-header">
-      <div class="header-left">
-        <div class="stat">
-          <span class="stat-icon">💰</span>
-          <span id="gold">500</span>
-        </div>
-        <div class="stat">
-          <span class="stat-icon">❤️</span>
-          <span id="lives">20</span>
-        </div>
-      </div>
-      <div class="wave-info">
-        <div class="wave-number" id="wave">Dalga 1</div>
-        <div style="font-size: 11px; opacity: 0.8;">Düşman: <span id="enemyCount">0</span></div>
-      </div>
-      <div class="header-right">
-        <div class="stat">
-          <span class="stat-icon">🎯</span>
-          <span id="score">0</span>
-        </div>
-      </div>
+
+<div class="sidebar">
+    <div class="logo-area" onclick="location.reload()">
+        <i class="fas fa-gem" style="color:var(--gold-leaf)"></i> Elmas'ın Dünyası
     </div>
 
-    <canvas id="game-canvas"></canvas>
-
-    <div class="tower-menu">
-      <div class="tower-btn" data-tower="arrow">
-        <div class="tower-icon">🏹</div>
-        <div class="tower-name">Ok Kulesi</div>
-        <div class="tower-cost">💰100</div>
-        <div class="tower-stats">Hasar: 10 | Menzil: Orta</div>
-      </div>
-      <div class="tower-btn" data-tower="cannon">
-        <div class="tower-icon">💣</div>
-        <div class="tower-name">Top</div>
-        <div class="tower-cost">💰200</div>
-        <div class="tower-stats">Hasar: 30 | Alan Hasarı</div>
-      </div>
-      <div class="tower-btn" data-tower="magic">
-        <div class="tower-icon">🔮</div>
-        <div class="tower-name">Büyü</div>
-        <div class="tower-cost">💰150</div>
-        <div class="tower-stats">Hasar: 15 | Yavaşlatma</div>
-      </div>
-      <div class="tower-btn" data-tower="ice">
-        <div class="tower-icon">❄️</div>
-        <div class="tower-name">Buz</div>
-        <div class="tower-cost">💰250</div>
-        <div class="tower-stats">Hasar: 20 | Donma</div>
-      </div>
+    <div id="ai-card" class="ai-living-card">
+        <div class="ai-title"><i class="fas fa-sparkles"></i> Bilge Asistan</div>
+        <div id="ai-text" class="ai-content">Elmas, bugün için verilerini analiz ediyorum, harika bir gün kurguluyoruz...</div>
+        <div id="ai-actions"></div>
     </div>
 
-    <div class="controls">
-      <button class="control-btn start" id="startWave">
-        ▶️ Dalgayı Başlat
-      </button>
-      <button class="control-btn pause" id="pauseBtn">
-        ⏸️ Duraklat
-      </button>
-      <button class="control-btn" id="sellBtn">
-        💸 Sat (50%)
-      </button>
+    <div class="section-header">Yaşam Dengesi</div>
+    <div class="balance-box">
+        <div class="balance-item">
+            <div class="balance-label"><span>Kişisel Gelişim</span><span id="txt-self">%0</span></div>
+            <div class="balance-bar"><div id="bar-self" class="balance-fill"></div></div>
+        </div>
+        <div class="balance-item">
+            <div class="balance-label"><span>Aile & Çocuklar</span><span id="txt-family">%0</span></div>
+            <div class="balance-bar"><div id="bar-family" class="balance-fill" style="background:var(--accent-sage)"></div></div>
+        </div>
+        <div class="balance-item">
+            <div class="balance-label"><span>Ev & İş Düzeni</span><span id="txt-work">%0</span></div>
+            <div class="balance-bar"><div id="bar-work" class="balance-fill" style="background:var(--deep-forest)"></div></div>
+        </div>
     </div>
-  </div>
 
-  <div class="tooltip" id="tooltip"></div>
+    <div class="section-header">Başarı Yolculuğu</div>
+    <div class="badge-container">
+        <div class="badge" id="b-morning" title="Erken Kuş"><i class="fas fa-sun"></i></div>
+        <div class="badge" id="b-queen" title="Günlük Kraliçe"><i class="fas fa-crown"></i></div>
+        <div class="badge" id="b-streak" title="7 Günlük Seri"><i class="fas fa-fire"></i></div>
+    </div>
 
-  <div class="modal" id="gameOverModal">
+    <div class="section-header">Önemli Günler <i class="fas fa-plus-circle" style="float:right; cursor:pointer;" onclick="openModal()"></i></div>
+    <div id="countdown-list" style="display:grid; gap:12px;"></div>
+</div>
+
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">2026</div>
+    <div id="calendar-area"></div>
+</div>
+
+<div id="toast" class="toast">💎 Harikasın Elmas!</div>
+
+<div id="modal" class="modal">
     <div class="modal-content">
-      <h2 id="modalTitle">🎮</h2>
-      <p id="modalText"></p>
-      <button class="modal-btn" onclick="location.reload()">Tekrar Oyna</button>
+        <h2 style="font-family:'Playfair Display'; color:var(--deep-forest); margin-top:0;">Yeni Bir Kilometre Taşı</h2>
+        <p style="color:#666; font-size:0.9rem; margin-bottom:25px;">Hayatındaki özel bir anı buraya not et.</p>
+        <input type="text" id="evt-title" placeholder="Etkinlik Adı" style="width:100%; padding:15px; margin-bottom:15px; border-radius:15px; border:1px solid #eee; outline:none; font-family:inherit;">
+        <input type="date" id="evt-date" style="width:100%; padding:15px; margin-bottom:25px; border-radius:15px; border:1px solid #eee; outline:none; font-family:inherit;">
+        <button onclick="saveEvent()" style="background:var(--deep-forest); color:white; border:none; padding:18px; width:100%; border-radius:15px; cursor:pointer; font-weight:700; font-size:1rem;">Ajandaya Ekle</button>
+        <button onclick="closeModal()" style="background:transparent; border:none; color:#aaa; width:100%; margin-top:15px; cursor:pointer; font-weight:600;">Vazgeç</button>
     </div>
-  </div>
+</div>
 
-  <script>
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
+<script>
+    // --- KONFİGÜRASYON ---
+    const GEMINI_API_KEY = "AIzaSyDUskMZ40aQyX4-F3tFG85eb01QYr-cBW4"; 
 
-    // Canvas boyutlandırma
-    function resizeCanvas() {
-      const container = canvas.parentElement;
-      canvas.width = container.clientWidth;
-      canvas.height = container.clientHeight;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Oyun durumu
-    const game = {
-      gold: 500,
-      lives: 20,
-      wave: 1,
-      score: 0,
-      paused: false,
-      waveActive: false,
-      selectedTower: null,
-      selectedTowerObj: null,
-      towers: [],
-      enemies: [],
-      projectiles: [],
-      particles: []
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGvtEr3GlcMAEE2T-sB1_mMpl6h10MBUo",
+      authDomain: "kotanailesibutcesi.firebaseapp.com",
+      databaseURL: "https://kotanailesibutcesi-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "kotanailesibutcesi",
+      storageBucket: "kotanailesibutcesi.firebasestorage.app",
+      messagingSenderId: "367586742596",
+      appId: "1:367586742596:web:f5b7406065610efc060711"
     };
 
-    // Yol tanımı (zig-zag pattern)
-    const path = [
-      { x: 0, y: 150 },
-      { x: 200, y: 150 },
-      { x: 200, y: 300 },
-      { x: 400, y: 300 },
-      { x: 400, y: 150 },
-      { x: canvas.width, y: 150 }
-    ];
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const userPath = "family_budget_v1/planner/elmas";
 
-    // Kule tipleri
-    const TOWER_TYPES = {
-      arrow: {
-        cost: 100,
-        damage: 10,
-        range: 100,
-        fireRate: 1000,
-        color: '#8B4513',
-        projectileColor: '#FFD700',
-        icon: '🏹'
-      },
-      cannon: {
-        cost: 200,
-        damage: 30,
-        range: 120,
-        fireRate: 2000,
-        color: '#696969',
-        projectileColor: '#FF4500',
-        splash: 50,
-        icon: '💣'
-      },
-      magic: {
-        cost: 150,
-        damage: 15,
-        range: 90,
-        fireRate: 800,
-        color: '#9370DB',
-        projectileColor: '#FF00FF',
-        slow: 0.5,
-        icon: '🔮'
-      },
-      ice: {
-        cost: 250,
-        damage: 20,
-        range: 110,
-        fireRate: 1500,
-        color: '#87CEEB',
-        projectileColor: '#00FFFF',
-        freeze: 2000,
-        icon: '❄️'
-      }
-    };
+    let selectedDate = null;
+    let dailyData = {};
+    let fullHistory = {};
 
-    // Düşman tipleri
-    const ENEMY_TYPES = {
-      basic: { hp: 50, speed: 1, gold: 10, color: '#FF6B6B', size: 12, icon: '👾' },
-      fast: { hp: 30, speed: 2, gold: 15, color: '#4ECDC4', size: 10, icon: '⚡' },
-      tank: { hp: 150, speed: 0.6, gold: 30, color: '#95E1D3', size: 16, icon: '🛡️' },
-      boss: { hp: 500, speed: 0.5, gold: 100, color: '#F38181', size: 20, icon: '👹' }
-    };
+    // Uygulamayı Başlat
+    document.addEventListener('DOMContentLoaded', () => {
+        renderYearView();
+        loadFullData();
+        loadEvents();
+    });
 
-    // Düşman sınıfı
-    class Enemy {
-      constructor(type, waveMultiplier) {
-        const enemyData = ENEMY_TYPES[type];
-        this.type = type;
-        this.maxHp = enemyData.hp * waveMultiplier;
-        this.hp = this.maxHp;
-        this.speed = enemyData.speed;
-        this.gold = Math.floor(enemyData.gold * waveMultiplier);
-        this.color = enemyData.color;
-        this.size = enemyData.size;
-        this.icon = enemyData.icon;
-        this.pathIndex = 0;
-        this.x = path[0].x;
-        this.y = path[0].y;
-        this.frozen = 0;
-        this.slowed = 1;
-      }
-
-      update(deltaTime) {
-        if (this.frozen > 0) {
-          this.frozen -= deltaTime;
-          return;
-        }
-
-        const target = path[this.pathIndex + 1];
-        if (!target) {
-          game.lives--;
-          updateStats();
-          const index = game.enemies.indexOf(this);
-          if (index > -1) game.enemies.splice(index, 1);
-          
-          if (game.lives <= 0) {
-            gameOver(false);
-          }
-          return;
-        }
-
-        const dx = target.x - this.x;
-        const dy = target.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 5) {
-          this.pathIndex++;
-        } else {
-          const actualSpeed = this.speed * this.slowed * (deltaTime / 16);
-          this.x += (dx / dist) * actualSpeed;
-          this.y += (dy / dist) * actualSpeed;
-        }
-
-        this.slowed = Math.min(this.slowed + 0.02, 1);
-      }
-
-      draw() {
-        // Düşman gövdesi
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // İkon
-        ctx.font = `${this.size}px Arial`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this.icon, this.x, this.y);
-
-        // Can çubuğu
-        const barWidth = this.size * 2;
-        const barHeight = 4;
-        const barX = this.x - barWidth / 2;
-        const barY = this.y - this.size - 8;
-
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.fillRect(barX, barY, barWidth, barHeight);
-
-        const hpPercent = this.hp / this.maxHp;
-        ctx.fillStyle = hpPercent > 0.5 ? '#00ff00' : hpPercent > 0.25 ? '#ffff00' : '#ff0000';
-        ctx.fillRect(barX, barY, barWidth * hpPercent, barHeight);
-
-        // Donma efekti
-        if (this.frozen > 0) {
-          ctx.strokeStyle = '#00FFFF';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size + 3, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-      }
-
-      takeDamage(damage) {
-        this.hp -= damage;
-        if (this.hp <= 0) {
-          game.gold += this.gold;
-          game.score += this.gold * 10;
-          updateStats();
-          
-          // Patlama partikülü
-          for (let i = 0; i < 8; i++) {
-            game.particles.push({
-              x: this.x,
-              y: this.y,
-              vx: (Math.random() - 0.5) * 4,
-              vy: (Math.random() - 0.5) * 4,
-              life: 30,
-              color: this.color
-            });
-          }
-          
-          const index = game.enemies.indexOf(this);
-          if (index > -1) game.enemies.splice(index, 1);
-        }
-      }
-    }
-
-    // Kule sınıfı
-    class Tower {
-      constructor(type, x, y) {
-        this.type = type;
-        this.x = x;
-        this.y = y;
-        this.data = TOWER_TYPES[type];
-        this.lastFire = 0;
-        this.target = null;
-        this.level = 1;
-      }
-
-      update(time) {
-        // Hedef bul
-        this.target = null;
-        let closestDist = this.data.range;
-
-        for (const enemy of game.enemies) {
-          const dx = enemy.x - this.x;
-          const dy = enemy.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < closestDist) {
-            closestDist = dist;
-            this.target = enemy;
-          }
-        }
-
-        // Ateş et
-        if (this.target && time - this.lastFire > this.data.fireRate) {
-          this.fire();
-          this.lastFire = time;
-        }
-      }
-
-      fire() {
-        game.projectiles.push({
-          x: this.x,
-          y: this.y,
-          target: this.target,
-          speed: 5,
-          damage: this.data.damage * this.level,
-          color: this.data.projectileColor,
-          tower: this
+    function loadFullData() {
+        db.ref(userPath + '/schedule').on('value', sn => {
+            fullHistory = sn.val() || {};
+            updateCalendarDots();
+            analyzeBalance();
+            if(!selectedDate) askUltimateAI();
         });
-      }
-
-      draw() {
-        // Kule gövdesi
-        ctx.fillStyle = this.data.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 15, 0, Math.PI * 2);
-        ctx.fill();
-
-        // İkon
-        ctx.font = '20px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(this.data.icon, this.x, this.y);
-
-        // Seviye göstergesi
-        if (this.level > 1) {
-          ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 10px Arial';
-          ctx.fillText(this.level, this.x, this.y + 20);
-        }
-
-        // Menzil göstergesi (seçiliyse)
-        if (game.selectedTowerObj === this) {
-          ctx.strokeStyle = 'rgba(0, 255, 255, 0.3)';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([5, 5]);
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.data.range, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        }
-
-        // Hedef çizgisi
-        if (this.target) {
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(this.x, this.y);
-          ctx.lineTo(this.target.x, this.target.y);
-          ctx.stroke();
-        }
-      }
     }
 
-    // Yolu çiz
-    function drawPath() {
-      ctx.strokeStyle = 'rgba(139, 69, 19, 0.5)';
-      ctx.lineWidth = 40;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(path[0].x, path[0].y);
-      for (let i = 1; i < path.length; i++) {
-        ctx.lineTo(path[i].x, path[i].y);
-      }
-      ctx.stroke();
+    // --- 🧠 ULTIMATE AI: ELMAS'IN YAŞAM KOÇU ---
+    async function askUltimateAI() {
+        const card = document.getElementById('ai-card');
+        const content = document.getElementById('ai-text');
+        const actions = document.getElementById('ai-actions');
+        card.classList.add('loading');
 
-      // Yol kenarları
-      ctx.strokeStyle = 'rgba(101, 67, 33, 0.8)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    }
+        const today = new Date().toISOString().split('T')[0];
+        const scheduleToday = fullHistory[today] || {};
+        const hour = new Date().getHours();
 
-    // Dalga başlat
-    function startWave() {
-      if (game.waveActive) return;
-      
-      game.waveActive = true;
-      const waveMultiplier = 1 + (game.wave - 1) * 0.3;
-      let enemyCount = 5 + game.wave * 2;
+        const elmasProfile = {
+            name: "Elmas",
+            job: "Rehber Öğretmen (Mehmet Kemal Dedeman O.O.)",
+            kids: "Ayşe Hilal (6), Oğuz Furkan (3)",
+            health: "Migren riski (Açlık, susuzluk ve yorgunluğa dikkat!)",
+            traits: "Pastel renkler, sadelik, dindar kişilik, BDT eğitimi tutkusu"
+        };
 
-      // Dalga kompozisyonu
-      const composition = [];
-      const basicCount = Math.floor(enemyCount * 0.5);
-      const fastCount = Math.floor(enemyCount * 0.3);
-      const tankCount = Math.floor(enemyCount * 0.15);
-      const bossCount = game.wave % 5 === 0 ? 1 : 0;
+        const prompt = `
+            Sen Elmas'ın bilge asistanısın. Elmas ${elmasProfile.job}, 2 çocuk annesi ve migreni var. 
+            Bugünün planı: ${JSON.stringify(scheduleToday)}. Saat şu an ${hour}:00. 
+            Ona çok samimi, motive edici bir dille bugüne dair bir tavsiye ver. 
+            Migrenini tetiklemeyecek bir denge öner. 
+            Yanıtı sadece JSON olarak ver: {"msg": "...", "task": "Görev", "time": "HH:00"}
+        `;
 
-      for (let i = 0; i < basicCount; i++) composition.push('basic');
-      for (let i = 0; i < fastCount; i++) composition.push('fast');
-      for (let i = 0; i < tankCount; i++) composition.push('tank');
-      for (let i = 0; i < bossCount; i++) composition.push('boss');
-
-      // Düşmanları spawn et
-      let spawnIndex = 0;
-      const spawnInterval = setInterval(() => {
-        if (spawnIndex >= composition.length) {
-          clearInterval(spawnInterval);
-          return;
-        }
-
-        game.enemies.push(new Enemy(composition[spawnIndex], waveMultiplier));
-        spawnIndex++;
-      }, 1000);
-    }
-
-    // Mermi güncelleme
-    function updateProjectiles() {
-      for (let i = game.projectiles.length - 1; i >= 0; i--) {
-        const proj = game.projectiles[i];
-        
-        if (!proj.target || proj.target.hp <= 0) {
-          game.projectiles.splice(i, 1);
-          continue;
-        }
-
-        const dx = proj.target.x - proj.x;
-        const dy = proj.target.y - proj.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 5) {
-          // Hasar ver
-          proj.target.takeDamage(proj.damage);
-
-          // Özel efektler
-          if (proj.tower.data.splash) {
-            // Alan hasarı
-            game.enemies.forEach(enemy => {
-              const edx = enemy.x - proj.target.x;
-              const edy = enemy.y - proj.target.y;
-              const edist = Math.sqrt(edx * edx + edy * edy);
-              if (edist < proj.tower.data.splash) {
-                enemy.takeDamage(proj.damage * 0.5);
-              }
+        try {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
-          }
+            const res = await resp.json();
+            const data = JSON.parse(res.candidates[0].content.parts[0].text.replace(/```json|```/g, ""));
+            
+            content.innerText = data.msg;
+            actions.innerHTML = `
+                <button class="ai-suggestion-btn" onclick="addSuggestedTask('${data.time}', '${data.task}')">
+                    <i class="fas fa-magic"></i> ${data.time} - ${data.task} Ekle
+                </button>`;
+        } catch (e) {
+            content.innerText = "Canım Elmas, bugün Ayşe Hilal ve Oğuz Furkan ile harika vakit geçirirken migrenini tetiklememek için bol su içmeyi unutma. ✨";
+        } finally { card.classList.remove('loading'); }
+    }
 
-          if (proj.tower.data.slow) {
-            proj.target.slowed = proj.tower.data.slow;
-          }
+    function addSuggestedTask(time, text) {
+        const today = new Date().toISOString().split('T')[0];
+        db.ref(`${userPath}/schedule/${today}/${time}`).set({ text: text, done: false });
+        showToast("💎 Planına eklendi!");
+    }
 
-          if (proj.tower.data.freeze) {
-            proj.target.frozen = proj.tower.data.freeze;
-          }
+    // --- ⚖️ DENGE SİSTEMİ ---
+    function analyzeBalance() {
+        const today = new Date().toISOString().split('T')[0];
+        const tasks = fullHistory[today] || {};
+        let s={self:0, fam:0, work:0};
 
-          game.projectiles.splice(i, 1);
-        } else {
-          proj.x += (dx / dist) * proj.speed;
-          proj.y += (dy / dist) * proj.speed;
+        const keywords = {
+            self: ['kitap','dua','namaz','bdt','dinlen','bakım','su','yürüyüş'],
+            fam: ['ayşe','hilal','oğuz','furkan','oyun','masal','çocuk','eşim'],
+            work: ['yemek','okul','rehberlik','temizlik','ütü','mutfak','pazar']
+        };
+
+        Object.values(tasks).forEach(t => {
+            const txt = (t.text || "").toLowerCase();
+            if(keywords.self.some(k => txt.includes(k))) s.self += 25;
+            if(keywords.fam.some(k => txt.includes(k))) s.fam += 25;
+            if(keywords.work.some(k => txt.includes(k))) s.work += 25;
+        });
+
+        const updateBar = (id, val) => {
+            const v = Math.min(val, 100);
+            document.getElementById('bar-'+id).style.width = v + "%";
+            document.getElementById('txt-'+id).innerText = "%" + v;
         }
-      }
+        updateBar('self', s.self); updateBar('family', s.fam); updateBar('work', s.work);
     }
 
-    // Partikül güncelleme
-    function updateParticles() {
-      for (let i = game.particles.length - 1; i >= 0; i--) {
-        const p = game.particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life--;
+    // --- TAKVİM YÖNETİMİ ---
+    function renderYearView() {
+        selectedDate = null;
+        const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+        let html = `<div class="calendar-grid">`;
+        months.forEach((m, i) => {
+            html += `<div class="month-card" onclick="renderMonthView(${i})"><h3>${m}</h3><p>2026</p></div>`;
+        });
+        document.getElementById('calendar-area').innerHTML = html + `</div>`;
+        document.getElementById('breadcrumbs').innerText = "2026";
+    }
 
-        if (p.life <= 0) {
-          game.particles.splice(i, 1);
+    function renderMonthView(m) {
+        const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+        document.getElementById('breadcrumbs').innerHTML = `<span onclick="renderYearView()">2026</span> / ${months[m]}`;
+        let html = `<div style="display:grid; grid-template-columns: repeat(7,1fr); gap:10px;">`;
+        const daysInMonth = new Date(2026, m + 1, 0).getDate();
+        for(let d=1; d<=daysInMonth; d++) {
+            const dStr = `2026-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            html += `<div class="cal-day" id="cal-${dStr}" onclick="renderDayView('${dStr}')">
+                        <strong>${d}</strong>
+                        <div class="cal-dot" style="display:none;"></div>
+                    </div>`;
         }
-      }
+        document.getElementById('calendar-area').innerHTML = html + `</div>`;
+        updateCalendarDots();
     }
 
-    // Çizim
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function renderDayView(dateStr) {
+        selectedDate = dateStr;
+        const displayDate = new Date(dateStr).toLocaleDateString('tr-TR', { dateStyle: 'full' });
+        document.getElementById('breadcrumbs').innerText = "← Takvime Dön";
+        document.getElementById('breadcrumbs').onclick = () => renderMonthView(new Date(dateStr).getMonth());
 
-      // Arka plan grid
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-      ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 50) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < canvas.height; y += 50) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-      }
-
-      drawPath();
-
-      // Kuleler
-      game.towers.forEach(tower => tower.draw());
-
-      // Düşmanlar
-      game.enemies.forEach(enemy => enemy.draw());
-
-      // Mermiler
-      game.projectiles.forEach(proj => {
-        ctx.fillStyle = proj.color;
-        ctx.beginPath();
-        ctx.arc(proj.x, proj.y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      // Partikül ler
-      game.particles.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.life / 30;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      });
+        let html = `
+            <div class="planner-container">
+                <div class="main-title" style="font-size:2.5rem;">${displayDate}</div>
+                <div class="progress-card">
+                    <div style="display:flex; justify-content:space-between; font-weight:800;"><span>Günün Parlaklığı</span><span id="p-text">0/0</span></div>
+                    <div class="progress-bar-bg" style="height:12px; background:#f0f0f0; border-radius:10px; margin-top:15px; overflow:hidden;">
+                        <div id="p-bar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--gold-leaf), var(--accent-sage)); transition: width 0.5s;"></div>
+                    </div>
+                </div>
+                <div id="day-tasks"></div>
+            </div>`;
+        document.getElementById('calendar-area').innerHTML = html;
+        loadDayTasks();
     }
 
-    // Güncelleme
-    let lastTime = 0;
-    function gameLoop(currentTime) {
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-
-      if (!game.paused) {
-        game.enemies.forEach(enemy => enemy.update(deltaTime));
-        game.towers.forEach(tower => tower.update(currentTime));
-        updateProjectiles();
-        updateParticles();
-
-        // Dalga kontrolü
-        if (game.waveActive && game.enemies.length === 0) {
-          game.waveActive = false;
-          game.wave++;
-          game.gold += 50 + game.wave * 10;
-          updateStats();
-          
-          if (game.wave > 20) {
-            gameOver(true);
-            return;
-          }
+    function loadDayTasks() {
+        dailyData = fullHistory[selectedDate] || {};
+        const container = document.getElementById('day-tasks');
+        let html = '';
+        for(let h=7; h<=23; h++) {
+            const time = `${String(h).padStart(2,'0')}:00`;
+            const task = dailyData[time] || { text: '', done: false };
+            html += `
+                <div class="hour-row ${task.done ? 'completed' : ''}">
+                    <div class="hour-label">${time}</div>
+                    <div class="check-circle ${task.done ? 'checked' : ''}" onclick="toggleTask('${time}')"><i class="fas fa-check"></i></div>
+                    <input class="task-input" value="${task.text}" placeholder="Niyetini buraya yaz..." onchange="updateTask('${time}', this.value)">
+                </div>`;
         }
-      }
-
-      draw();
-      requestAnimationFrame(gameLoop);
+        container.innerHTML = html;
+        updateUIProgress();
     }
 
-    // İstatistikleri güncelle
-    function updateStats() {
-      document.getElementById('gold').textContent = game.gold;
-      document.getElementById('lives').textContent = game.lives;
-      document.getElementById('wave').textContent = `Dalga ${game.wave}`;
-      document.getElementById('score').textContent = game.score;
-      document.getElementById('enemyCount').textContent = game.enemies.length;
+    function updateTask(time, val) {
+        if(!dailyData[time]) dailyData[time] = { done: false };
+        dailyData[time].text = val;
+        if(val.trim() === "") delete dailyData[time];
+        db.ref(`${userPath}/schedule/${selectedDate}`).set(dailyData);
+        updateUIProgress();
+    }
 
-      // Kule butonlarını güncelle
-      document.querySelectorAll('.tower-btn').forEach(btn => {
-        const towerType = btn.dataset.tower;
-        if (towerType) {
-          const cost = TOWER_TYPES[towerType].cost;
-          if (game.gold < cost) {
-            btn.classList.add('disabled');
-          } else {
-            btn.classList.remove('disabled');
-          }
+    function toggleTask(time) {
+        if(!dailyData[time] || !dailyData[time].text) return;
+        dailyData[time].done = !dailyData[time].done;
+        if(dailyData[time].done) {
+            confetti({ particleCount: 60, spread: 70, origin: { y: 0.8 }, colors: ['#b59f6d', '#414833'] });
+            showToast("Harikasın Elmas! ✨");
         }
-
-           });
+        db.ref(`${userPath}/schedule/${selectedDate}`).set(dailyData);
+        loadDayTasks();
     }
 
-    // Oyun sonu
-    function gameOver(won) {
-      game.paused = true;
-      const modal = document.getElementById('gameOverModal');
-      document.getElementById('modalTitle').textContent = won ? '🎉 Kazandınız!' : '💔 Oyun Bitti';
-      document.getElementById('modalText').textContent = 
-        won 
-          ? `Tüm dalgaları savuşturdunuz!\n\nSkor: ${game.score}\nDalga: ${game.wave}`
-          : `Şehir düştü!\n\nSkor: ${game.score}\nDalga: ${game.wave}`;
-      modal.classList.add('active');
-    }
-
-    // Event listener'lar
-    canvas.addEventListener('click', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      // Kule tıklama kontrolü
-      let towerClicked = false;
-      for (const tower of game.towers) {
-        const dx = tower.x - x;
-        const dy = tower.y - y;
-        if (Math.sqrt(dx * dx + dy * dy) < 20) {
-          game.selectedTowerObj = tower;
-          towerClicked = true;
-          draw();
-          return;
-        }
-      }
-
-      // Yeni kule yerleştir
-      if (game.selectedTower && !towerClicked) {
-        const towerData = TOWER_TYPES[game.selectedTower];
+    function updateUIProgress() {
+        let total = 0, done = 0, early = false;
+        Object.entries(dailyData).forEach(([time, task]) => {
+            if(task.text) {
+                total++;
+                if(task.done) {
+                    done++;
+                    if(parseInt(time) < 10) early = true;
+                }
+            }
+        });
+        const pct = total === 0 ? 0 : (done / total) * 100;
+        if(document.getElementById('p-bar')) document.getElementById('p-bar').style.width = pct + "%";
+        if(document.getElementById('p-text')) document.getElementById('p-text').innerText = `${done}/${total}`;
         
-        // Yol kontrolü
-        let onPath = false;
-        for (let i = 0; i < path.length - 1; i++) {
-          const p1 = path[i];
-          const p2 = path[i + 1];
-          const distToLine = Math.abs((p2.y - p1.y) * x - (p2.x - p1.x) * y + p2.x * p1.y - p2.y * p1.x) / 
-                            Math.sqrt((p2.y - p1.y) ** 2 + (p2.x - p1.x) ** 2);
-          if (distToLine < 30) {
-            onPath = true;
-            break;
-          }
+        document.getElementById('b-morning').classList.toggle('active', early);
+        document.getElementById('b-queen').classList.toggle('active', pct === 100 && total > 0);
+    }
+
+    function updateCalendarDots() {
+        Object.keys(fullHistory).forEach(date => {
+            const el = document.getElementById('cal-' + date);
+            if(el) el.querySelector('.cal-dot').style.display = 'block';
+        });
+    }
+
+    // --- ETKİNLİK YÖNETİMİ ---
+    function loadEvents() {
+        db.ref(userPath + '/events').on('value', sn => {
+            const container = document.getElementById('countdown-list');
+            container.innerHTML = '';
+            const data = sn.val();
+            if(data) Object.entries(data).forEach(([id, ev]) => {
+                const diff = Math.ceil((new Date(ev.date) - new Date()) / (1000*60*60*24));
+                container.innerHTML += `
+                    <div class="ai-living-card" style="padding:15px; margin-bottom:0; background:#fff;">
+                        <div style="font-size:0.8rem; font-weight:700; color:var(--accent-sage);">${ev.title}</div>
+                        <div style="font-size:1.1rem; font-weight:800; color:var(--gold-leaf);">${diff < 0 ? 'Geçti' : diff + ' Gün'}</div>
+                        <i class="fas fa-times" style="position:absolute; top:10px; right:10px; cursor:pointer; color:#ddd;" onclick="db.ref('${userPath}/events/${id}').remove()"></i>
+                    </div>`;
+            });
+        });
+    }
+
+    function saveEvent() {
+        const title = document.getElementById('evt-title').value;
+        const date = document.getElementById('evt-date').value;
+        if(title && date) {
+            db.ref(userPath + '/events').push({ title, date });
+            closeModal();
+            showToast("Yeni anı kaydedildi! ✨");
         }
+    }
 
-        if (onPath) {
-          alert('Kuleyi yola koyamazsınız!');
-          return;
-        }
+    // --- YARDIMCI FONKSİYONLAR ---
+    function showToast(m) {
+        const t = document.getElementById('toast');
+        t.innerText = m; t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    function openModal() { document.getElementById('modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-        // Kule çakışma kontrolü
-        for (const tower of game.towers) {
-          const dx = tower.x - x;
-          const dy = tower.y - y;
-          if (Math.sqrt(dx * dx + dy * dy) < 40) {
-            alert('Çok yakın! Başka bir yer seçin.');
-            return;
-          }
-        }
-
-        if (game.gold >= towerData.cost) {
-          game.gold -= towerData.cost;
-          game.towers.push(new Tower(game.selectedTower, x, y));
-          updateStats();
-        }
-      }
-    });
-
-    // Mobil dokunma desteği
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent('click', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    });
-
-    // Kule seçimi
-    document.querySelectorAll('.tower-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const towerType = btn.dataset.tower;
-        if (!towerType) return;
-
-        if (game.gold >= TOWER_TYPES[towerType].cost) {
-          document.querySelectorAll('.tower-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          game.selectedTower = towerType;
-          game.selectedTowerObj = null;
-        }
-      });
-    });
-
-    // Kontrol butonları
-    document.getElementById('startWave').addEventListener('click', startWave);
-    
-    document.getElementById('pauseBtn').addEventListener('click', () => {
-      game.paused = !game.paused;
-      document.getElementById('pauseBtn').innerHTML = game.paused ? '▶️ Devam' : '⏸️ Duraklat';
-    });
-
-    document.getElementById('sellBtn').addEventListener('click', () => {
-      if (game.selectedTowerObj) {
-        const refund = Math.floor(game.selectedTowerObj.data.cost * game.selectedTowerObj.level * 0.5);
-        game.gold += refund;
-        const index = game.towers.indexOf(game.selectedTowerObj);
-        if (index > -1) game.towers.splice(index, 1);
-        game.selectedTowerObj = null;
-        updateStats();
-        draw();
-      }
-    });
-
-    // Başlat
-    updateStats();
-    requestAnimationFrame(gameLoop);
-  </script>
+</script>
 </body>
-</html></parameter>
-</invoke>                                           
+</html>
